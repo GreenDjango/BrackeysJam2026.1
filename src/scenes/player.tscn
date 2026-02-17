@@ -38,7 +38,7 @@ func _input(event: InputEvent) -> void:
 func remove_life() -> void:
 	if current_life > 0:
 		current_life = current_life - 1
-		$OmniLight3D.light_energy = current_life / float(max_life)
+		$Torch.light_energy = current_life / float(max_life)
 "
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_26beo"]
@@ -56,7 +56,14 @@ mesh = SubResource("CapsuleMesh_26beo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_26beo")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=225046883]
+[node name="Torch" type="OmniLight3D" parent="." unique_id=225046883]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2, -1)
 light_color = Color(0.9999997, 0.7524437, 0.66248655, 1)
 shadow_enabled = true
+
+[node name="Dialog" type="Label3D" parent="." unique_id=471950260]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+billboard = 1
+text = "Hello
+Je oeuf"
+vertical_alignment = 2
