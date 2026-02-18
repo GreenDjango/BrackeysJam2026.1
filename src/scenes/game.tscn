@@ -1,7 +1,72 @@
 [gd_scene format=3 uid="uid://c0bdtjmn1b4gh"]
 
+[ext_resource type="Script" uid="uid://c1d0ref15vmj1" path="res://src/scenes/game.gd" id="1_3rtjt"]
 [ext_resource type="PackedScene" uid="uid://bum3w3ougalos" path="res://src/entities/player.tscn" id="1_qfxj7"]
 [ext_resource type="Script" uid="uid://b8uxkhnk7d8co" path="res://src/scenes/spring_arm_3d.gd" id="2_covw0"]
+
+[sub_resource type="Shader" id="Shader_covw0"]
+code = "// Converted from https://www.shadertoy.com/view/td2GzW
+shader_type canvas_item;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+// Anti fish eye (negative amount) / fish eye (positive)
+uniform float effect_amount : hint_range(-2.5, 2.5) = 1.0;
+
+void fragment() {
+	// glsl -> godot shader
+	vec2 iResolution = 1.0 / SCREEN_PIXEL_SIZE;
+	vec4 fragCoord = FRAGCOORD;
+
+	//normalized coords 
+	vec2 p = fragCoord.xy / iResolution.x;
+
+	//screen proroption
+	float prop = iResolution.x / iResolution.y;
+
+	//center coords
+	vec2 m = vec2(0.5, 0.5 / prop);
+
+	//vector from center to current fragment
+	vec2 d = p - m;
+
+	// distance of pixel from center
+	float r = sqrt(dot(d, d)); 
+
+	float power = effect_amount;
+
+	//radius of 1:1 effect
+	float bind;
+	
+	//stick to borders
+	if (power > 0.0) 
+		bind = sqrt(dot(m, m));
+	else {
+		if (prop < 1.0) 
+    		bind = m.x; 
+    	else 
+        	bind = m.y;
+	}
+
+	vec2 uv;
+	//fisheye
+	if (power > 0.0)
+		uv = m + normalize(d) * tan(r * power) * bind / tan( bind * power);
+	//antifisheye
+	else if (power < 0.0)
+		uv = m + normalize(d) * atan(r * -power * 10.0) * bind / atan(-power * bind * 10.0);
+	//no effect for power = 1.0
+	else
+		uv = p;
+    uv.y *= prop;
+
+	vec3 col = texture(SCREEN_TEXTURE, uv).rgb;
+    
+	COLOR = vec4(col, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3rtjt"]
+shader = SubResource("Shader_covw0")
+shader_parameter/effect_amount = 1.6040001949400002
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qfxj7"]
 sky_top_color = Color(1, 0.47018713, 0.39553028, 1)
@@ -23,7 +88,52 @@ size = Vector2(10, 10)
 [sub_resource type="BoxShape3D" id="BoxShape3D_covw0"]
 size = Vector3(10, 1, 10)
 
+[sub_resource type="Shader" id="Shader_qfxj7"]
+code = "shader_type canvas_item;
+
+uniform sampler2D screen_texture : hint_screen_texture;
+uniform float grain_amount : hint_range(0.0, 1.0) = 0.05; // Adjust the amount of grain
+uniform float grain_size : hint_range(0.1, 10.0) = 1.0; // Adjust the size of the grain
+uniform bool animate = false;
+
+void fragment() {
+	// Sample the original screen texture
+	vec4 original_color = texture(screen_texture, SCREEN_UV);
+	
+	float noise = 0.0;
+	
+	if (animate) {
+		// Generate random noise
+		noise = (fract(sin(dot(UV * TIME, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 2.0;
+	} else {
+		 noise = (fract(sin(dot(UV, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 2.0;
+	}
+	// Add noise to the original color
+	original_color.rgb += noise * grain_amount * grain_size;
+	
+	// Clamp the final color to make sure it stays in the valid range
+	COLOR = clamp(original_color, 0.0, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_covw0"]
+shader = SubResource("Shader_qfxj7")
+shader_parameter/grain_amount = 0.050000002375
+shader_parameter/grain_size = 1.0
+shader_parameter/animate = false
+
 [node name="Game" type="Node3D" unique_id=664495583]
+script = ExtResource("1_3rtjt")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=890081452]
+
+[node name="BodyCam" type="ColorRect" parent="CanvasLayer" unique_id=959627027]
+material = SubResource("ShaderMaterial_3rtjt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=750896921]
 environment = SubResource("Environment_3rtjt")
@@ -45,3 +155,14 @@ mesh = SubResource("PlaneMesh_qfxj7")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=398013267]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4995, 0)
 shape = SubResource("BoxShape3D_covw0")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1649531986]
+
+[node name="Grain" type="ColorRect" parent="CanvasLayer2" unique_id=781885694]
+material = SubResource("ShaderMaterial_covw0")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
