@@ -27,3 +27,7 @@ mono_crash.*.json
 *.njsproj
 *.sln
 *.sw?
+
+# Misc
+.DS_Store
+TODO.md
