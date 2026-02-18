@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c0bdtjmn1b4gh"]
 
-[ext_resource type="Script" uid="uid://c1d0ref15vmj1" path="res://src/scenes/game.gd" id="1_3rtjt"]
+[ext_resource type="Script" path="res://src/scenes/game.gd" id="1_3rtjt"]
 [ext_resource type="PackedScene" uid="uid://bum3w3ougalos" path="res://src/entities/player.tscn" id="1_qfxj7"]
 [ext_resource type="Script" uid="uid://b8uxkhnk7d8co" path="res://src/scenes/spring_arm_3d.gd" id="2_covw0"]
 

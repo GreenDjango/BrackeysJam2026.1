@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://cfcx54h02us8y"]
+
+[ext_resource type="PackedScene" uid="uid://cl4aa1velcaxd" path="res://assets/main_character/torch.glb" id="1_p7kqy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p7kqy"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_ictw4"]
+material = SubResource("StandardMaterial3D_p7kqy")
+radius = 0.2
+height = 0.4
+radial_segments = 4
+rings = 2
+
+[sub_resource type="Curve" id="Curve_78npx"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.26083416), 0.6995018, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_ictw4"]
+offsets = PackedFloat32Array(0, 0.060215052, 0.44516128, 0.6795699, 1)
+colors = PackedColorArray(0.8980392, 0.9372549, 0, 0, 0.8980392, 0.9372549, 0, 1, 0.99999994, 0.22953579, 0.17418489, 1, 0.7056003, 0.0023075086, 1.92523e-07, 1, 0, 0, 0, 0)
+
+[node name="Node3D" type="Node3D" unique_id=1387670597]
+
+[node name="torch" parent="." unique_id=2044631086 instance=ExtResource("1_p7kqy")]
+transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0)
+
+[node name="flame" type="CPUParticles3D" parent="." unique_id=594849098]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 1.3682318, 0)
+amount = 100
+lifetime = 0.09999999999999999
+preprocess = 0.1
+speed_scale = 0.1
+fixed_fps = 60
+mesh = SubResource("SphereMesh_ictw4")
+emission_shape = 1
+emission_sphere_radius = 0.2
+particle_flag_align_y = true
+spread = 0.0
+flatness = 1.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 20.0
+angle_max = 360.0
+scale_amount_min = 0.0
+scale_amount_max = 1.3
+scale_amount_curve = SubResource("Curve_78npx")
+color_ramp = SubResource("Gradient_ictw4")
+hue_variation_min = -1.0
+hue_variation_max = -1.0
