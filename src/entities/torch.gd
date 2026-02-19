@@ -19,4 +19,5 @@ func _process(delta):
 		cible_energy = base_energy + randf_range(-intensite_flamme, intensite_flamme)
 	light_energy = lerp(light_energy, cible_energy, vitesse_flamme * delta)
 	var tremblement = randf_range(-instabilite, instabilite)
-	omni_range = ((base_range * $'../../../../..'.current_life * 0.5) * (light_energy / base_energy)) + tremblement
+	var current_life : int = get_tree().get_nodes_in_group("player")[0].current_life
+	omni_range = ((base_range * current_life * 0.5) * (light_energy / base_energy)) + tremblement

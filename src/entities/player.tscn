@@ -207,7 +207,7 @@ states/sortir_torche/position = Vector2(332.5, 87.5)
 transitions = ["Start", "sortir_torche", SubResource("AnimationNodeStateMachineTransition_o5qvw"), "sortir_torche", "WalkBlendSpace2D", SubResource("AnimationNodeStateMachineTransition_lqcqj"), "idle 2", "WalkBlendSpace2D", SubResource("AnimationNodeStateMachineTransition_2lfla"), "WalkBlendSpace2D", "idle 2", SubResource("AnimationNodeStateMachineTransition_3glep"), "idle", "idle 2", SubResource("AnimationNodeStateMachineTransition_gkg86"), "idle 2", "idle", SubResource("AnimationNodeStateMachineTransition_rqrib"), "idle", "WalkBlendSpace2D", SubResource("AnimationNodeStateMachineTransition_s0nk1")]
 graph_offset = Vector2(95.96997, 7.0431876)
 
-[node name="Player" type="CharacterBody3D" unique_id=460088547 node_paths=PackedStringArray("particles_node")]
+[node name="Player" type="CharacterBody3D" unique_id=460088547 node_paths=PackedStringArray("particles_node") groups=["player"]]
 script = SubResource("GDScript_26beo")
 particles_node = NodePath("MainCharacter/Armature/Skeleton3D/LeftHandBoneAttachment/Node3D/flame")
 
