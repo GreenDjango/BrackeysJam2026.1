@@ -1,8 +1,32 @@
 [gd_scene format=3 uid="uid://c0bdtjmn1b4gh"]
 
-[ext_resource type="Script" path="res://src/scenes/game.gd" id="1_3rtjt"]
 [ext_resource type="PackedScene" uid="uid://bum3w3ougalos" path="res://src/entities/player.tscn" id="1_qfxj7"]
-[ext_resource type="Script" uid="uid://b8uxkhnk7d8co" path="res://src/scenes/spring_arm_3d.gd" id="2_covw0"]
+
+[sub_resource type="GDScript" id="GDScript_qfxj7"]
+script/source = "extends Node3D
+
+# todo: find a better shader value
+# todo: merge CanvasLayer2 and CanvasLayer
+# todo: properly rename node
+func _input(event: InputEvent) -> void:
+	var grain_shader = $CanvasLayer2/Grain.material
+	var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
+	var grain_amount = grain_shader.get_shader_parameter(\"grain_amount\")
+	if event.is_action_pressed(\"ui_cancel\"):
+		if $Player.current_life > 0:
+			grain_shader.set_shader_parameter(\"grain_size\", grain_size + 0.2)
+			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount + 0.01)
+	if event.is_action_pressed(\"ui_select\"):
+		# fixme: use signal to avoid sync error as follow:
+		#	1. Player._input -> $Player.current_life++
+		#   2. (next line)   -> false
+		# So, the original value of `grain_size` will be never meet. By using
+		# \"signal\" or other sync features, we will be assured that an update
+		# has been performed on the player life
+		if $Player.current_life < $Player.max_life:
+			grain_shader.set_shader_parameter(\"grain_size\", grain_size - 0.2)
+			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount - 0.01)
+"
 
 [sub_resource type="Shader" id="Shader_covw0"]
 code = "// Converted from https://www.shadertoy.com/view/td2GzW
@@ -82,6 +106,26 @@ sky = SubResource("Sky_covw0")
 ssao_enabled = true
 glow_enabled = true
 
+[sub_resource type="GDScript" id="GDScript_covw0"]
+script/source = "extends SpringArm3D
+
+@export var mouse_sensibility: float = 0.0005
+@export_range(-90.0, 0.0, 0.1, \"radians_as_degrees\") var min_vertical_angle: float = -PI/2
+@export_range(0.0, 90.0, 0.1, \"radians_as_degrees\") var max_vertical_angle: float = PI/4
+
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	pass
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		rotation.y -= event.relative.x * mouse_sensibility
+		rotation.y = wrapf(rotation.y, 0.0, TAU)
+
+		rotation.x -= event.relative.y * mouse_sensibility
+		rotation.x = clamp(rotation.x, min_vertical_angle, max_vertical_angle)
+"
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_qfxj7"]
 size = Vector2(10, 10)
 
@@ -122,7 +166,7 @@ shader_parameter/grain_size = 1.0
 shader_parameter/animate = false
 
 [node name="Game" type="Node3D" unique_id=664495583]
-script = ExtResource("1_3rtjt")
+script = SubResource("GDScript_qfxj7")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=890081452]
 
@@ -143,7 +187,7 @@ environment = SubResource("Environment_3rtjt")
 [node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=1792243068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4884977, 0)
 spring_length = 8.0
-script = ExtResource("2_covw0")
+script = SubResource("GDScript_covw0")
 
 [node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=391964210]
 

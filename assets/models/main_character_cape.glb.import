@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cl4aa1velcaxd"
-path="res://.godot/imported/torch.glb-dd1f3382a934581a8ec105562746034e.scn"
+uid="uid://3lquyq823t3c"
+path="res://.godot/imported/main_character_cape.glb-d87dae018acf07eda070f04599b4c53f.scn"
 
 [deps]
 
-source_file="res://assets/main_character/torch.glb"
-dest_files=["res://.godot/imported/torch.glb-dd1f3382a934581a8ec105562746034e.scn"]
+source_file="res://assets/models/main_character_cape.glb"
+dest_files=["res://.godot/imported/main_character_cape.glb-d87dae018acf07eda070f04599b4c53f.scn"]
 
 [params]
 
@@ -17,7 +17,7 @@ nodes/root_type=""
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true
-nodes/root_scale=1.0
+nodes/root_scale=0.257
 nodes/import_as_skeleton_bones=false
 nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
@@ -37,6 +37,18 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"meshes": {
+"main_character_cape_Plane": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://assets/meshes/main_character_cape.res",
+"save_to_file/path": "uid://c7hfaagbqnbx8"
+}
+}
+}
 gltf/naming_version=2
 gltf/embedded_image_handling=1
