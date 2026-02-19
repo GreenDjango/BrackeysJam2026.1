@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bhmrmut1jjhoo"]
+
+[sub_resource type="GDScript" id="GDScript_tjn26"]
+script/source = "extends CanvasLayer
+
+func _process(delta: float) -> void:
+	$Label.text = var_to_str(Engine.get_frames_per_second()) + \" FPS\"
+"
+
+[node name="Fps" type="CanvasLayer" unique_id=50958211]
+script = SubResource("GDScript_tjn26")
+
+[node name="Label" type="Label" parent="." unique_id=1321459835]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
