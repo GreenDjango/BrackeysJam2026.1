@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://blcdujkt26nhf" path="res://assets/models/main_character.glb" id="1_cusn3"]
 [ext_resource type="PackedScene" uid="uid://cfcx54h02us8y" path="res://src/entities/torch.tscn" id="2_3glep"]
-[ext_resource type="Script" uid="uid://rthim5yne1k3" path="res://src/entities/torch.gd" id="3_o5qvw"]
+[ext_resource type="Script" path="res://src/entities/torch.gd" id="3_o5qvw"]
 [ext_resource type="ArrayMesh" uid="uid://c7hfaagbqnbx8" path="res://assets/meshes/main_character_cape.res" id="4_lqcqj"]
 
 [sub_resource type="GDScript" id="GDScript_26beo"]
@@ -194,10 +194,10 @@ shape = SubResource("CapsuleShape3D_26beo")
 [node name="MainCharacter" parent="." unique_id=1015311831 instance=ExtResource("1_cusn3")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
-[node name="Armature" parent="MainCharacter" index="0" unique_id=932743045]
+[node name="Armature" parent="MainCharacter" index="0" unique_id=599338251]
 transform = Transform3D(0.01, 0, 0, 0, -4.3711387e-10, -0.01, 0, 0.01, -4.3711387e-10, 0, 0, 0)
 
-[node name="Skeleton3D" parent="MainCharacter/Armature" index="0" unique_id=915333526]
+[node name="Skeleton3D" parent="MainCharacter/Armature" index="0" unique_id=1719986212]
 bones/0/position = Vector3(2.385511, -3.4569077, -260.3428)
 bones/0/rotation = Quaternion(-0.668815, -0.17455222, 0.17949446, 0.6999998)
 bones/1/position = Vector3(8.34465e-07, 19.411194, -0.35083914)

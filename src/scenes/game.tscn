@@ -26,6 +26,9 @@ func _input(event: InputEvent) -> void:
 		if $Player.current_life < $Player.max_life:
 			grain_shader.set_shader_parameter(\"grain_size\", grain_size - 0.2)
 			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount - 0.01)
+
+func _process(delta: float) -> void:
+	$Path3D/PathFollow3D.progress_ratio += delta / 20.0
 "
 
 [sub_resource type="Shader" id="Shader_covw0"]
@@ -126,12 +129,23 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotation.x = clamp(rotation.x, min_vertical_angle, max_vertical_angle)
 "
 
+[sub_resource type="Curve3D" id="Curve3D_qfxj7"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 13.69969, 2.5061684, -9.705795, 0, 0, 0, 0, 0, 0, 29.863, 2.506, -10.551, 0, 0, 0, 0, 0, 0, 31.943, 2.506, -19.371, 0, 0, 0, 0, 0, 0, 28.059, 2.506, -26.948, 0, 0, 0, 0, 0, 0, 17.588, 2.506, -28.538, 0, 0, 0, 0, 0, 0, 9.004, 2.506, -28.321, 0, 0, 0, 0, 0, 0, 3.406, 2.506, -23.216, 0, 0, 0, 0, 0, 0, -3.559, 2.506, -17.606, 0, 0, 0, 0, 0, 0, -12.736, 2.506, -13.457, 0, 0, 0, 0, 0, 0, -26.731585, 4.625519, -9.2014065, 0, 0, 0, 0, 0, 0, -32.453545, 5.903839, -11.865137, 0, 0, 0, 0, 0, 0, -36.605232, 8.695938, -18.28857, 0, 0, 0, 0, 0, 0, -34.29055, 10.94981, -23.884663, 0, 0, 0, 0, 0, 0, -24.19964, 12.160839, -27.53313, 0, 0, 0, 0, 0, 0, -15.900351, 12.127201, -28.053982, 0, 0, 0, 0, 0, 0, -8.443341, 9.906979, -23.247559, 0, 0, 0, 0, 0, 0, -4.2986116, 8.662308, -20.550453, 0, 0, 0, 0, 0, 0, -1.8619584, 7.1148796, -17.134335, 0, 0, 0, 0, 0, 0, 1.6157899, 5.197418, -12.875996),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 19
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfxj7"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_qfxj7"]
 material = SubResource("StandardMaterial3D_qfxj7")
 radius = 5.0
 height = 10.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qfxj7"]
+radius = 5.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_qfxj7"]
 size = Vector2(10, 10)
@@ -198,10 +212,23 @@ script = SubResource("GDScript_covw0")
 
 [node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=391964210]
 
-[node name="Boule3D" type="MeshInstance3D" parent="." unique_id=902182902]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9429712, -11.210842)
+[node name="Path3D" type="Path3D" parent="." unique_id=1417264825]
+curve = SubResource("Curve3D_qfxj7")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1580898727]
+transform = Transform3D(-0.31870916, -0.065658584, -0.945563, -0.75317967, 0.62318164, 0.21058984, 0.57543856, 0.7793042, -0.2480675, 13.699693, 2.5061686, -9.705795)
+progress = 171.78822
+
+[node name="Boule3D" type="AnimatableBody3D" parent="Path3D/PathFollow3D" unique_id=1910222882]
+sync_to_physics = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D/Boule3D" unique_id=902182902]
+transform = Transform3D(1.0000088, 0, 0, 5.9604645e-08, 1.0000058, -1.4901161e-08, 0, -2.9802322e-08, 1.0000037, 0, 0, 0)
 layers = 3
 mesh = SubResource("SphereMesh_qfxj7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Path3D/PathFollow3D/Boule3D" unique_id=1884811548]
+shape = SubResource("SphereShape3D_qfxj7")
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1429971742]
 
