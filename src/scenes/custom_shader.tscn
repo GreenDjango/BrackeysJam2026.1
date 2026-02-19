@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cb0stmtmt8018"]
+
+[ext_resource type="Script" uid="uid://bf706jcmfaekv" path="res://custom_shader.gd" id="1_y7flx"]
+
+[node name="CustomShader" type="Node3D" unique_id=1372476795]
+script = ExtResource("1_y7flx")

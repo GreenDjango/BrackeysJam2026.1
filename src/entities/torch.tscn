@@ -18,8 +18,8 @@ _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.26083416), 0.6995018, 0.0, 
 point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_ictw4"]
-offsets = PackedFloat32Array(0, 0.060215052, 0.44516128, 0.6795699, 1)
-colors = PackedColorArray(0.8980392, 0.9372549, 0, 0, 0.8980392, 0.9372549, 0, 1, 0.99999994, 0.22953579, 0.17418489, 1, 0.7056003, 0.0023075086, 1.92523e-07, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0, 0.0995935, 0.45043105, 0.6795699, 1)
+colors = PackedColorArray(0.89827347, 0.9371796, 0, 0.231, 0.8980392, 0.9372549, 0, 1, 0.99999994, 0.22953579, 0.17418489, 1, 0.7056003, 0.0023075086, 1.92523e-07, 1, 0, 0, 0, 0)
 
 [node name="Node3D" type="Node3D" unique_id=1387670597]
 
@@ -40,8 +40,8 @@ particle_flag_align_y = true
 spread = 0.0
 flatness = 1.0
 gravity = Vector3(0, 0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 20.0
+initial_velocity_max = 30.0
+angular_velocity_max = 5.7
 angle_max = 360.0
 scale_amount_min = 0.0
 scale_amount_max = 1.3

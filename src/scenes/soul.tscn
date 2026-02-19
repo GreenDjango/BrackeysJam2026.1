@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://c5j7vqger2gnu"]
+
+[ext_resource type="Script" uid="uid://dqmjxspdsbjpj" path="res://area_3d.gd" id="1_hp7pr"]
+[ext_resource type="Shader" uid="uid://bchvgibdujmna" path="res://dissolved.tres" id="2_l624k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p7kqy"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_tgot2"]
+lightmap_size_hint = Vector2i(8, 5)
+material = SubResource("StandardMaterial3D_p7kqy")
+radius = 0.2
+height = 0.4
+radial_segments = 5
+rings = 3
+
+[sub_resource type="Curve" id="Curve_fc2ee"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.26083416), 0.6995018, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_0dp3e"]
+offsets = PackedFloat32Array(0, 0.0995935, 0.27586207, 0.45043105, 0.6795699, 1)
+colors = PackedColorArray(0.67207205, 0.9394569, 0.99999994, 0.231, 0.2824354, 0.37620738, 1, 1, 0.15192026, 0.1141885, 0.9999998, 1, 0.31853408, 0.5406733, 1, 1, 0.27398753, 0.0002079489, 0.3396022, 1, 0, 0, 0, 0)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qv3ef"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_txje5"]
+render_priority = 0
+shader = ExtResource("2_l624k")
+shader_parameter/ColorParameter = Color(1, 1, 1, 1)
+shader_parameter/Dissolve_Height = 0.5
+shader_parameter/Noise_scale = 0.3
+shader_parameter/Noise_size = 20.0
+shader_parameter/Glow = 0.04
+shader_parameter/ColorParameter2 = Color(0.38311273, 0.24783953, 2.0599988, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_i3acw"]
+material = SubResource("ShaderMaterial_txje5")
+radial_segments = 14
+rings = 7
+
+[node name="Area3D" type="Area3D" unique_id=9560848]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08841759, 0)
+script = ExtResource("1_hp7pr")
+
+[node name="flame" type="CPUParticles3D" parent="." unique_id=2078955310]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.36424226, 0)
+amount = 200
+lifetime = 0.2
+preprocess = 0.1
+speed_scale = 0.2
+explosiveness = 0.2
+randomness = 1.0
+fixed_fps = 60
+mesh = SubResource("SphereMesh_tgot2")
+emission_shape = 1
+emission_sphere_radius = 0.5
+spread = 10.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_max = 5.0
+angular_velocity_max = 5.7
+angle_max = 360.0
+scale_amount_min = 0.0
+scale_amount_curve = SubResource("Curve_fc2ee")
+color_ramp = SubResource("Gradient_0dp3e")
+hue_variation_min = -1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1279184804]
+shape = SubResource("SphereShape3D_qv3ef")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=904078420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012199491, 0)
+mesh = SubResource("SphereMesh_i3acw")
