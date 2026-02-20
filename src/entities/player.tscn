@@ -10,6 +10,8 @@ script/source = "extends CharacterBody3D
 
 @export var particles_node : CPUParticles3D
 
+signal player_life_updated(type)
+
 const SPEED := 5.0
 const JUMP_VELOCITY := 10.0
 const WEIGHT := 2.0
@@ -83,15 +85,20 @@ func switch_flame() -> void:
 		particles_node.color_ramp.set_color(3, Color(0.821, 0.0, 0.702, 1.0))
 
 func remove_life() -> void:
-	if current_life > 0:
-		current_life = current_life - 1
-		$MainCharacter/Armature/Skeleton3D/LeftHandBoneAttachment/Torch.light_energy = current_life / float(max_life)
-		particles_node.scale_amount_max = current_life * .2 -0.2
+	if current_life < 0:
+		return
+	current_life = current_life - 1
+	$MainCharacter/Armature/Skeleton3D/LeftHandBoneAttachment/Torch.light_energy = current_life / float(max_life)
+	particles_node.scale_amount_max = current_life * .2 -0.2
+	player_life_updated.emit(-1)
 
 func add_life() -> void:
-	if current_life < max_life:
-		current_life = current_life + 1
-		$MainCharacter/Armature/Skeleton3D/LeftHandBoneAttachment/Torch.light_energy = current_life / float(max_life)
+	if current_life >= max_life:
+		return
+	current_life = current_life + 1
+	$MainCharacter/Armature/Skeleton3D/LeftHandBoneAttachment/Torch.light_energy = current_life / float(max_life)
+	particles_node.scale_amount_max = current_life * .2 +0.2
+	player_life_updated.emit(1)
 "
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_26beo"]
@@ -219,10 +226,10 @@ shape = SubResource("CapsuleShape3D_26beo")
 [node name="MainCharacter" parent="." unique_id=1015311831 instance=ExtResource("1_cusn3")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
-[node name="Armature" parent="MainCharacter" index="0" unique_id=958032990]
+[node name="Armature" parent="MainCharacter" index="0" unique_id=207680067]
 transform = Transform3D(0.01, 0, 0, 0, -4.3711387e-10, -0.01, 0, 0.01, -4.3711387e-10, 0, 0, 0)
 
-[node name="Skeleton3D" parent="MainCharacter/Armature" index="0" unique_id=1997271804]
+[node name="Skeleton3D" parent="MainCharacter/Armature" index="0" unique_id=1505989295]
 bones/0/position = Vector3(2.385511, -3.4569077, -260.3428)
 bones/0/rotation = Quaternion(-0.668815, -0.17455222, 0.17949446, 0.6999998)
 bones/1/position = Vector3(8.34465e-07, 19.411194, -0.35083914)

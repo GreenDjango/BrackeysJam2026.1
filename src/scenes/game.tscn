@@ -8,26 +8,22 @@
 [sub_resource type="GDScript" id="GDScript_qfxj7"]
 script/source = "extends Node3D
 
-# todo: find a better shader value
-# todo: properly rename node
-func _input(event: InputEvent) -> void:
+func _ready() -> void:
+	$Player.player_life_updated.connect(_on_player_life_update)
+
+## This function is magically invoked when the player life is updated
+## - when the player lost life: add grain
+## - when the player gain life: remove grain
+func _on_player_life_update(type: int) -> void: 
 	var grain_shader = $CanvasLayer/ScreenFX.material
 	var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
 	var grain_amount = grain_shader.get_shader_parameter(\"grain_amount\")
-	if event.is_action_pressed(\"ui_cancel\"):
-		if $Player.current_life > 0:
-			grain_shader.set_shader_parameter(\"grain_size\", grain_size + 0.2)
-			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount + 0.01)
-	if event.is_action_pressed(\"ui_select\"):
-		# fixme: use signal to avoid sync error as follow:
-		#	1. Player._input -> $Player.current_life++
-		#   2. (next line)   -> false
-		# So, the original value of `grain_size` will be never meet. By using
-		# \"signal\" or other sync features, we will be assured that an update
-		# has been performed on the player life
-		if $Player.current_life < $Player.max_life:
-			grain_shader.set_shader_parameter(\"grain_size\", grain_size - 0.2)
-			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount - 0.01)
+	if type < 0:
+		grain_shader.set_shader_parameter(\"grain_size\", grain_size + 0.2)
+		grain_shader.set_shader_parameter(\"grain_amount\", grain_amount + 0.01)
+	if type > 0:
+		grain_shader.set_shader_parameter(\"grain_size\", grain_size - 0.2)
+		grain_shader.set_shader_parameter(\"grain_amount\", grain_amount - 0.01)
 
 func _process(delta: float) -> void:
 	$Path3D/PathFollow3D.progress_ratio += delta / 20.0
@@ -234,14 +230,12 @@ shape = SubResource("BoxShape3D_qfxj7")
 
 [node name="map" parent="." unique_id=1567580077 instance=ExtResource("3_yufto")]
 
-[node name="Plane" parent="map" index="0" unique_id=254705660]
+[node name="Plane" parent="map" index="0" unique_id=441685967]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -333.3151)
 visible = false
 
-[node name="Landscape_003" parent="map" index="1" unique_id=1702246113]
+[node name="Landscape_003" parent="map" index="1" unique_id=1283111492]
 surface_material_override/0 = SubResource("ShaderMaterial_lcg6w")
-
-[editable path="map"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1737969835]
 
@@ -253,3 +247,5 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
+
+[editable path="map"]
