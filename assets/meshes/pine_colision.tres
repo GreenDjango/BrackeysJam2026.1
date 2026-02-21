@@ -1,0 +1,7 @@
+[gd_resource type="CapsuleShape3D" format=3 uid="uid://coid7ch77vsj4"]
+
+[resource]
+custom_solver_bias = 0.3
+margin = 3.853
+radius = 1.0
+height = 20.0

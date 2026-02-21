@@ -38,6 +38,33 @@ materials/extract=1
 materials/extract_format=1
 materials/extract_path="res://assets/meshes"
 _subresources={
+"materials": {
+"Material.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/meshes/Material.001.res",
+"use_external/path": "uid://dojkw46ugdr16"
+},
+"Material.002": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/meshes/Material.002.res",
+"use_external/path": "uid://dgblj16scea4c"
+},
+"Material.003": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/meshes/Material.003.res",
+"use_external/path": "uid://dojnh8rg4vxcg"
+},
+"Material.004": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/meshes/Material.004.res",
+"use_external/path": "uid://bcoa3x8rwg66s"
+},
+"feuille": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/meshes/feuille.res",
+"use_external/path": "uid://bgj41n2twugik"
+}
+},
 "meshes": {
 "Pine1_Circle_005": {
 "generate/lightmap_uv": 0,
@@ -55,8 +82,8 @@ _subresources={
 "generate/physics": true,
 "physics/shape_type": 6,
 "primitive/height": 50.0,
-"primitive/position": Vector3(0, 21, -1.5),
-"primitive/radius": 3.0,
+"primitive/position": Vector3(0.5, 21, -1.3),
+"primitive/radius": 2.5,
 "primitive/size": Vector3(4, 45, 4)
 }
 }
