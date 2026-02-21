@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5j7vqger2gnu" path="res://src/scenes/soul.tscn" id="1_covw0"]
 [ext_resource type="PackedScene" uid="uid://bum3w3ougalos" path="res://src/entities/player.tscn" id="1_qfxj7"]
+[ext_resource type="Shader" uid="uid://ca0oc4ogcacr7" path="res://src/scenes/sky.gdshader" id="2_lcg6w"]
 [ext_resource type="PackedScene" uid="uid://dho3i07b1prfl" path="res://assets/meshes/map/map.glb" id="3_yufto"]
 [ext_resource type="Shader" uid="uid://cviyctb1mo0wh" path="res://assets/meshes/map/map.tres" id="4_276xm"]
 [ext_resource type="Script" uid="uid://b7tq0nahlprc7" path="res://src/scenes/screen_fx.gd" id="5_276xm"]
@@ -9,23 +10,55 @@
 [sub_resource type="GDScript" id="GDScript_qfxj7"]
 script/source = "extends Node3D
 
+@onready var viewport = $SubViewport # Vérifie bien le chemin vers ton SubViewport
+@onready var world_env = $WorldEnvironment
+
+#relance le shader du ciel :)
+func _ready():
+	await get_tree().process_frame
+	var tex = viewport.get_texture()
+	var sky_mat = world_env.environment.sky.sky_material as PanoramaSkyMaterial
+	if sky_mat:
+		sky_mat.panorama = tex
+# todo: find a better shader value
+# todo: properly rename node
+func _input(event: InputEvent) -> void:
+	var grain_shader = $CanvasLayer/ScreenFX.material
+	var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
+	var grain_amount = grain_shader.get_shader_parameter(\"grain_amount\")
+	if event.is_action_pressed(\"ui_cancel\"):
+		if $Player.current_life > 0:
+			grain_shader.set_shader_parameter(\"grain_size\", grain_size + 0.2)
+			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount + 0.01)
+	if event.is_action_pressed(\"ui_select\"):
+		# fixme: use signal to avoid sync error as follow:
+		#	1. Player._input -> $Player.current_life++
+		#   2. (next line)   -> false
+		# So, the original value of `grain_size` will be never meet. By using
+		# \"signal\" or other sync features, we will be assured that an update
+		# has been performed on the player life
+		if $Player.current_life < $Player.max_life:
+			grain_shader.set_shader_parameter(\"grain_size\", grain_size - 0.2)
+			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount - 0.01)
+
 func _process(delta: float) -> void:
 	$Path3D/PathFollow3D.progress_ratio += delta / 20.0
 "
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qfxj7"]
-sky_top_color = Color(1, 0.47018713, 0.39553028, 1)
-sky_horizon_color = Color(0.9252929, 0.7850897, 0.7574254, 1)
-ground_horizon_color = Color(0.9252929, 0.7850897, 0.7574254, 1)
+[sub_resource type="ViewportTexture" id="ViewportTexture_lcg6w"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gh3at"]
+resource_local_to_scene = true
+panorama = SubResource("ViewportTexture_lcg6w")
 
 [sub_resource type="Sky" id="Sky_covw0"]
-sky_material = SubResource("ProceduralSkyMaterial_qfxj7")
+sky_material = SubResource("PanoramaSkyMaterial_gh3at")
 
 [sub_resource type="Environment" id="Environment_3rtjt"]
+resource_local_to_scene = true
 background_mode = 2
 sky = SubResource("Sky_covw0")
-ssao_enabled = true
-glow_enabled = true
 
 [sub_resource type="GDScript" id="GDScript_covw0"]
 script/source = "extends SpringArm3D
@@ -146,20 +179,66 @@ shader_parameter/grain_size = 1.0
 shader_parameter/grain_time = 1.5
 shader_parameter/fisheye_effect_amount = 1.6000001947499998
 
+[sub_resource type="MultiMesh" id="MultiMesh_276xm"]
+mesh = ExtResource("5_276xm")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_lcg6w"]
+noise_type = 0
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gh3at"]
+noise = SubResource("FastNoiseLite_lcg6w")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_flib5"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h2mn8"]
+noise = SubResource("FastNoiseLite_flib5")
+seamless = true
+
+[sub_resource type="Gradient" id="Gradient_lcg6w"]
+offsets = PackedFloat32Array(0, 0.99233127)
+colors = PackedColorArray(0.25374085, 0.0004609482, 0.38119543, 1, 0.22128546, 0.32690573, 0.3713092, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6e0h8"]
+noise_type = 2
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bd8mh"]
+width = 128
+height = 32
+noise = SubResource("FastNoiseLite_6e0h8")
+color_ramp = SubResource("Gradient_lcg6w")
+in_3d_space = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flib5"]
+shader = ExtResource("2_lcg6w")
+shader_parameter/pixelation = Vector2(256, 256)
+shader_parameter/cloud_noise1 = SubResource("NoiseTexture2D_gh3at")
+shader_parameter/scroll_speed1 = Vector2(-0.01, 0.02)
+shader_parameter/cloud_noise2 = SubResource("NoiseTexture2D_h2mn8")
+shader_parameter/scroll_speed2 = Vector2(0.02, 0)
+shader_parameter/center_pos = Vector2(0, 0)
+shader_parameter/position_impact = 0.0
+shader_parameter/color_gardient = SubResource("NoiseTexture2D_bd8mh")
+
 [node name="Game" type="Node3D" unique_id=664495583]
 script = SubResource("GDScript_qfxj7")
 
 [node name="Area3D2" parent="." unique_id=9560848 instance=ExtResource("1_covw0")]
 transform = Transform3D(1.3891187, 0, 0, 0, 1.3891187, 0, 0, 0, 1.3891187, 0, -1.9838243, -343.44778)
+visible = false
 
 [node name="Area3D" parent="." unique_id=1951934155 instance=ExtResource("1_covw0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.382318, 5.2654614, 1.842658)
+visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=750896921]
 environment = SubResource("Environment_3rtjt")
 
 [node name="Player" parent="." unique_id=460088547 instance=ExtResource("1_qfxj7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 122.72923, -45.220543, 351.56824)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.917297, -39.647106, 351.56824)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=1792243068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.13955, 0.65444064)
@@ -168,13 +247,15 @@ script = SubResource("GDScript_covw0")
 mouse_sensibility = 0.002
 
 [node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=391964210]
+fov = 70.0
+size = 11.059
 
 [node name="Path3D" type="Path3D" parent="." unique_id=1417264825]
 visible = false
 curve = SubResource("Curve3D_qfxj7")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1580898727]
-transform = Transform3D(-0.31870916, -0.065658584, -0.94556296, -0.75317967, 0.62318164, 0.21058983, 0.57543856, 0.7793042, -0.24806748, 13.699693, 2.5061686, -9.705795)
+transform = Transform3D(-0.31870407, -0.06568372, -0.9455629, -0.75322866, 0.62312233, 0.21058983, 0.5753773, 0.7793494, -0.2480676, 13.699693, 2.5061686, -9.705795)
 progress = 171.78822
 
 [node name="Boule3D" type="AnimatableBody3D" parent="Path3D/PathFollow3D" unique_id=1910222882]
@@ -189,6 +270,7 @@ mesh = SubResource("SphereMesh_qfxj7")
 shape = SubResource("SphereShape3D_qfxj7")
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1429971742]
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1216062309]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
@@ -200,6 +282,7 @@ shape = SubResource("BoxShape3D_covw0")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=2118754025]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3506775, 5, -10.279705)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=126496255]
 mesh = SubResource("BoxMesh_qfxj7")
@@ -209,11 +292,11 @@ shape = SubResource("BoxShape3D_qfxj7")
 
 [node name="map" parent="." unique_id=1567580077 instance=ExtResource("3_yufto")]
 
-[node name="Plane" parent="map" index="0" unique_id=441685967]
+[node name="Plane" parent="map" index="0" unique_id=1722470483]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -333.3151)
 visible = false
 
-[node name="Landscape_003" parent="map" index="1" unique_id=1283111492]
+[node name="Landscape_003" parent="map" index="1" unique_id=2110117]
 surface_material_override/0 = SubResource("ShaderMaterial_lcg6w")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1737969835]
@@ -227,5 +310,25 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("5_276xm")
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="." unique_id=1271592374]
+multimesh = SubResource("MultiMesh_276xm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMeshInstance3D" unique_id=1776885283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 103.75488, -54.765186, 325.425)
+mesh = ExtResource("5_276xm")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1682316352]
+size = Vector2i(1024, 512)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="SubViewport" unique_id=371982939]
+material = SubResource("ShaderMaterial_flib5")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [editable path="map"]

@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/image="uid://p3x57le0ws5w"
 config/icon="res://assets/icon.svg"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/proton_scatter/plugin.cfg")
+
 [input]
 
 left={
