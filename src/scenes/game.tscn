@@ -125,12 +125,30 @@ uniform float grain_amount : hint_range(0.0, 1.0) = 0.05;
 uniform float grain_size : hint_range(0.1, 10.0) = 1.0;
 uniform float grain_time : hint_range(0.0, 10.0) = 1.5;
 uniform float fisheye_effect_amount : hint_range(-2.5, 2.5) = 1.6;
+uniform float circle_size : hint_range(0.0, 1.05) = 0.6;
 
-void fragment() {
-	// fish-eye
-	vec2 iResolution = 1.0 / SCREEN_PIXEL_SIZE;
-	vec4 fragCoord = FRAGCOORD;
-	vec2 p = fragCoord.xy / iResolution.x;
+/**
+ * Noise generator based on manual time management
+ * Docs:
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shader_functions.html#shader-func-dot
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shader_functions.html#shader-func-sin
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shader_functions.html#shader-func-fract
+ * Notes:
+ * - https://godotshaders.com/shader/film-grain-shader/
+ */
+float _effect_get_noise(vec2 g_UV) {
+	return (fract(sin(dot(g_UV * grain_time, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 2.0;
+}
+
+/**
+ * Fish-eye effect.
+ * Docs:
+ * - https://godotshaders.com/shader/fisheye-anti-fisheye-camera-effect/
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/canvas_item_shader.html
+ */
+vec4 _effect_fisheye(vec2 g_SCREEN_PIXEL_SIZE, vec4 g_FRAGCOORD) {
+	vec2 iResolution = 1.0 / g_SCREEN_PIXEL_SIZE;
+	vec2 p = g_FRAGCOORD.xy / iResolution.x;
 	float prop = iResolution.x / iResolution.y;
 	vec2 m = vec2(0.5, 0.5 / prop);
 	vec2 d = p - m;
@@ -151,16 +169,44 @@ void fragment() {
 		uv = p;
 	}
     uv.y *= prop;
-	vec3 col = texture(SCREEN_TEXTURE, uv).rgb;
-	
-	// grain handling
-	// - previous pixel color = `col`
-	float noise = 0.0;
-	vec4 original_color = vec4(col, 1.0); //texture(SCREEN_TEXTURE, SCREEN_UV);
-	noise = (fract(sin(dot(UV * grain_time, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 2.0;
+	return vec4(texture(SCREEN_TEXTURE, uv).rgb,1.0);
+}
 
-	original_color.rgb += noise * grain_amount * grain_size;
-	COLOR = clamp(original_color, 0.0, 1.0);
+/**
+ * Grain effect
+ * Docs:
+ * - https://godotshaders.com/shader/film-grain-shader/
+ */
+vec4 _effect_grain(vec4 pixel, vec2 g_UV) {
+	pixel.rgb += _effect_get_noise(g_UV) * grain_amount * grain_size;
+	return clamp(pixel, 0.0, 1.0);
+}
+
+/**
+ * Dark circle effect
+ * Docs:
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shader_functions.html#shader-func-distance
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shader_functions.html#shader-func-mix
+ * - https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shader_functions.html#shader-func-mod
+ */
+vec4 _effect_circle(vec4 pixel, vec2 g_UV, float g_circle_size) {
+	float dist = distance(vec2(0.5, 0.5), vec2(mix(0.5, g_UV.x, 1.0), g_UV.y));
+	dist += 0.1 - mod(_effect_get_noise(g_UV), 0.2);
+	if (step(g_circle_size, dist) > 0.0) {
+		pixel.r = pixel.r / 1.5;
+		pixel.g = pixel.g / 1.5;
+		pixel.b = pixel.b / 1.5;
+	}
+	return pixel;
+}
+
+void fragment() {
+	vec4 pixel = _effect_fisheye(SCREEN_PIXEL_SIZE, FRAGCOORD);
+	pixel = _effect_circle(pixel, UV, circle_size);
+	pixel = _effect_circle(pixel, UV, circle_size + 0.05);
+	pixel = _effect_circle(pixel, UV, circle_size + 0.10);
+	pixel = _effect_grain(pixel, UV);
+	COLOR = pixel;
 }
 "
 
@@ -170,6 +216,9 @@ shader_parameter/grain_amount = 0.05
 shader_parameter/grain_size = 1.0
 shader_parameter/grain_time = 1.5
 shader_parameter/fisheye_effect_amount = 1.6000001947499998
+shader_parameter/circle_size = 0.6
+
+[sub_resource type="MultiMesh" id="MultiMesh_276xm"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_lcg6w"]
 noise_type = 0
@@ -281,6 +330,12 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("5_276xm")
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="." unique_id=1271592374]
+multimesh = SubResource("MultiMesh_276xm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMeshInstance3D" unique_id=1776885283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 103.75488, -54.765186, 325.425)
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1682316352]
 size = Vector2i(1024, 512)

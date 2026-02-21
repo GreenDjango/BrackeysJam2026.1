@@ -5,10 +5,22 @@ signal fx_grain_time_update
 
 var _fx_timer_counter: int = 0
 var _fx_timer_speed: int = 38
+var _fx_timer_update: bool = false
 
 func _ready() -> void:
 	fx_grain_size_update.connect(_on_player_life_update)
 	fx_grain_time_update.connect(_on_player_moved)
+
+func _process(delta: float) -> void:
+	if not _fx_timer_update:
+		return
+	_fx_timer_counter += 1
+	if (_fx_timer_counter % _fx_timer_speed) != 0:
+		return
+	var grain_shader = self.material
+	var grain_time = grain_shader.get_shader_parameter("grain_time")
+	grain_shader.set_shader_parameter("grain_time", grain_time + 0.5)
+	_fx_timer_update = false
 
 ## This function is magically invoked when the player life is updated
 ## - when the player lost life: add grain
@@ -31,9 +43,4 @@ func _on_player_life_update(type: int) -> void:
 ## - when the player lost life: slow down the animation
 ## - when the player gain life: speed up the animation
 func _on_player_moved() -> void:
-	_fx_timer_counter += 1
-	if (_fx_timer_counter % _fx_timer_speed) != 0:
-		return
-	var grain_shader = self.material
-	var grain_time = grain_shader.get_shader_parameter("grain_time")
-	grain_shader.set_shader_parameter("grain_time", grain_time + 0.5)
+	_fx_timer_update = true
