@@ -66,17 +66,19 @@ sky = SubResource("Sky_covw0")
 [sub_resource type="GDScript" id="GDScript_covw0"]
 script/source = "extends SpringArm3D
 
-@export var mouse_sensibility: float = 0.0001
-@export_range(-90.0, 0.0, 0.1, \"radians_as_degrees\") var min_vertical_angle: float = -PI/2
-@export_range(0.0, 90.0, 0.1, \"radians_as_degrees\") var max_vertical_angle: float = PI/4
+@export_range(0., 180., 0.1, \"radians_as_degrees\") var max_y_angle: float = PI/2
+@export_range(0., 180., 0.1, \"radians_as_degrees\") var max_x_angle: float = PI/2
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		rotation.y -= event.relative.x * mouse_sensibility
-		rotation.y = wrapf(rotation.y, 0.0, TAU)
+		var mouse_offset: Vector2 = (clamp(
+			event.global_position / Vector2(get_window().size),
+			Vector2.ZERO,
+			Vector2.ONE
+		) - Vector2(0.5, 0.5)) * 2
 
-		rotation.x -= event.relative.y * mouse_sensibility
-		rotation.x = clamp(rotation.x, min_vertical_angle, max_vertical_angle)
+		rotation.y = -mouse_offset.x * max_y_angle
+		rotation.x = -mouse_offset.y * max_x_angle
 
 		$\"../../CanvasLayer/ScreenFX\".fx_grain_time_update.emit()
 "
@@ -220,10 +222,11 @@ environment = SubResource("Environment_3rtjt")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.917297, -39.647106, 351.56824)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=1792243068]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.13955, 0.65444064)
-spring_length = 8.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 1)
+spring_length = 20.0
 script = SubResource("GDScript_covw0")
-mouse_sensibility = 0.002
+max_y_angle = 0.7853981633974483
+max_x_angle = 0.7853981633974483
 
 [node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=391964210]
 fov = 70.0

@@ -24,6 +24,7 @@ extends MultiMeshInstance3D
 
 @export_group("")
 @export_tool_button("Generer maintenant")
+@warning_ignore("unused_private_class_variable")
 var _generer_maintenant = prepare_and_run
 
 var terrain_image: Image
