@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgbtb1c7d2fx8"
-path.s3tc="res://.godot/imported/texteterain.png-95bcb53aff52f97672561b579db402bb.s3tc.ctex"
+uid="uid://bfuyfft60goqr"
+path="res://.godot/imported/grass.png-44de1b601ed5e0482c9aa195977ab90c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/meshes/map/texteterain.png"
-dest_files=["res://.godot/imported/texteterain.png-95bcb53aff52f97672561b579db402bb.s3tc.ctex"]
+source_file="res://assets/textures/grass.png"
+dest_files=["res://.godot/imported/grass.png-44de1b601ed5e0482c9aa195977ab90c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

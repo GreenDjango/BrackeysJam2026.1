@@ -6,7 +6,7 @@
 transparency = 1
 vertex_color_use_as_albedo = true
 
-[sub_resource type="SphereMesh" id="SphereMesh_ictw4"]
+[sub_resource type="SphereMesh" id="SphereMesh_6p0ac"]
 material = SubResource("StandardMaterial3D_p7kqy")
 radius = 0.2
 height = 0.4
@@ -21,19 +21,20 @@ point_count = 2
 offsets = PackedFloat32Array(0, 0.0995935, 0.45043105, 0.6795699, 1)
 colors = PackedColorArray(0.89827347, 0.9371796, 0, 0.231, 0.8980392, 0.9372549, 0, 1, 0.99999994, 0.22953579, 0.17418489, 1, 0.7056003, 0.0023075086, 1.92523e-07, 1, 0, 0, 0, 0)
 
-[node name="Node3D" type="Node3D" unique_id=1387670597]
+[node name="Torch" type="Node3D" unique_id=1387670597]
 
-[node name="torch" parent="." unique_id=2044631086 instance=ExtResource("1_p7kqy")]
+[node name="Mesh" parent="." unique_id=2044631086 instance=ExtResource("1_p7kqy")]
 transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0)
 
-[node name="flame" type="CPUParticles3D" parent="." unique_id=594849098]
+[node name="FlameParticles" type="CPUParticles3D" parent="." unique_id=594849098]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 1.3682318, 0)
+emitting = false
 amount = 100
 lifetime = 0.1
 preprocess = 0.1
 speed_scale = 0.1
 fixed_fps = 60
-mesh = SubResource("SphereMesh_ictw4")
+mesh = SubResource("SphereMesh_6p0ac")
 emission_shape = 1
 emission_sphere_radius = 0.2
 particle_flag_align_y = true

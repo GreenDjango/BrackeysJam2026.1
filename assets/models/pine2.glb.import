@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dho3i07b1prfl"
-path="res://.godot/imported/map.glb-3b8a33767cd9351f869864c9e3c657ed.scn"
+uid="uid://du4ddchye3ewv"
+path="res://.godot/imported/pine2.glb-5c11092ae93734b1d57e6f4fc5696b7e.scn"
 
 [deps]
 
-source_file="res://assets/meshes/map/map.glb"
-dest_files=["res://.godot/imported/map.glb-3b8a33767cd9351f869864c9e3c657ed.scn"]
+source_file="res://assets/models/pine2.glb"
+dest_files=["res://.godot/imported/pine2.glb-5c11092ae93734b1d57e6f4fc5696b7e.scn"]
 
 [params]
 
@@ -38,9 +38,15 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={
-"nodes": {
-"PATH:Landscape_003": {
-"generate/physics": true
+"meshes": {
+"pine2_Circle_003": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://assets/meshes/pine2.res",
+"save_to_file/path": "uid://14iqvntqlmmi"
 }
 }
 }

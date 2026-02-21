@@ -2,19 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tw3xs88hi11v"
-path="res://.godot/imported/map_texteterain.png-1a6bdbb6b8e62510056e0c53fbb012de.ctex"
+uid="uid://ccvxhebuhjhj7"
+path="res://.godot/imported/Rock.jpg-35fc1904e957f21903fb1e241d3dbb4a.ctex"
 metadata={
 "vram_texture": false
-}
-generator_parameters={
-"md5": "eb0217751230ef4c416924b0422601bc"
 }
 
 [deps]
 
-source_file="res://assets/meshes/map/map_texteterain.png"
-dest_files=["res://.godot/imported/map_texteterain.png-1a6bdbb6b8e62510056e0c53fbb012de.ctex"]
+source_file="res://assets/textures/Rock.jpg"
+dest_files=["res://.godot/imported/Rock.jpg-35fc1904e957f21903fb1e241d3dbb4a.ctex"]
 
 [params]
 

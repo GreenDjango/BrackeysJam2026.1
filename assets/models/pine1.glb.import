@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://ombnj8ey3q2m"
-path="res://.godot/imported/grass.glb-220108a3dd01c4a163225277b2e2bbc0.scn"
+uid="uid://b5l3taexrw7at"
+path="res://.godot/imported/pine1.glb-1a1a0c641e8b3853057a575a97dfe043.scn"
 
 [deps]
 
-source_file="res://assets/meshes/map/grass.glb"
-dest_files=["res://.godot/imported/grass.glb-220108a3dd01c4a163225277b2e2bbc0.scn"]
+source_file="res://assets/models/pine1.glb"
+dest_files=["res://.godot/imported/pine1.glb-1a1a0c641e8b3853057a575a97dfe043.scn"]
 
 [params]
 
@@ -17,7 +17,7 @@ nodes/root_type=""
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true
-nodes/root_scale=0.2
+nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
 nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
@@ -39,14 +39,14 @@ materials/extract_format=0
 materials/extract_path=""
 _subresources={
 "meshes": {
-"grass_Plane": {
+"pine1_Circle_005": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
-"generate/shadow_meshes": 0,
+"generate/shadow_meshes": 1,
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://assets/meshes/grass.res",
-"save_to_file/path": "uid://dl710bm1wf5es"
+"save_to_file/fallback_path": "res://assets/meshes/pine1.res",
+"save_to_file/path": "uid://otvb01ccjjeh"
 }
 }
 }

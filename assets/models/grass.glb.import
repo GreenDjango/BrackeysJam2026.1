@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://btocadehq4sep"
-path="res://.godot/imported/Pine2.glb-e59d0fc3671f2c31e0409631a4568824.scn"
+uid="uid://ombnj8ey3q2m"
+path="res://.godot/imported/grass.glb-7b2cc5bb8ebe3d27d15a269ca3bfab9f.scn"
 
 [deps]
 
-source_file="res://assets/models/Pine2.glb"
-dest_files=["res://.godot/imported/Pine2.glb-e59d0fc3671f2c31e0409631a4568824.scn"]
+source_file="res://assets/models/grass.glb"
+dest_files=["res://.godot/imported/grass.glb-7b2cc5bb8ebe3d27d15a269ca3bfab9f.scn"]
 
 [params]
 
@@ -17,7 +17,7 @@ nodes/root_type=""
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true
-nodes/root_scale=1.0
+nodes/root_scale=0.2
 nodes/import_as_skeleton_bones=false
 nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
@@ -38,11 +38,15 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={
-"nodes": {
-"PATH:feuill_002": {
-"generate/navmesh": 2,
-"generate/physics": true,
-"physics/shape_type": 1
+"meshes": {
+"grass_Plane": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://assets/meshes/grass.res",
+"save_to_file/path": "uid://dl710bm1wf5es"
 }
 }
 }
