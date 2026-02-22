@@ -29,5 +29,5 @@ void fragment() {
 	//Mixes the noise color with the distance to get noise that warps around the center
 	float final = mix(1.0-noise_col.r, dist, position_impact);
 	//applies the color from the gradient
-	COLOR = texture(color_gardient, vec2(final, final));
+	COLOR.rgb = texture(color_gardient, vec2(final, final)).rgb * COLOR.r;
 }
