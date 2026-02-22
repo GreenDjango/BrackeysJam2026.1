@@ -108,6 +108,13 @@ sky_material = SubResource("PanoramaSkyMaterial_gh3at")
 resource_local_to_scene = true
 background_mode = 2
 sky = SubResource("Sky_covw0")
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.48235294, 0.54901963, 0.7058824, 1)
+fog_density = 0.2
+fog_sky_affect = 0.0
+fog_depth_curve = 1.5
+fog_depth_end = 200.0
 
 [sub_resource type="GDScript" id="GDScript_covw0"]
 script/source = "extends SpringArm3D
@@ -378,12 +385,14 @@ script = SubResource("GDScript_covw0")
 [node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=391964210]
 fov = 70.0
 size = 11.059
+far = 400.0
 
 [node name="Map" type="Node3D" parent="." unique_id=145537176]
 
 [node name="MapMesh" parent="Map" unique_id=2032639576 instance=ExtResource("3_yufto")]
 
 [node name="Landscape_003" parent="Map/MapMesh" index="0" unique_id=153921017]
+layers = 3
 surface_material_override/0 = SubResource("ShaderMaterial_lcg6w")
 
 [node name="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1396569816) index="0" unique_id=407746742]
@@ -394,7 +403,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17579183, -0.1847265, 2.07
 shape = SubResource("BoxShape3D_bd8mh")
 
 [node name="TreeMultiMesh" type="MultiMeshInstance3D" parent="Map" unique_id=1688826147 node_paths=PackedStringArray("target_surface")]
-cast_shadow = 0
+layers = 3
 multimesh = ExtResource("4_h2mn8")
 script = ExtResource("6_flib5")
 instance_count = 10000
