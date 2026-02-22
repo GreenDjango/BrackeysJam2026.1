@@ -35,7 +35,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	# Walk animation
-	var input_dir := Input.get_vector(\"left\", \"right\", \"up\", \"down\")
+	var input_dir := Input.get_vector(\"player_left\", \"player_right\", \"player_up\", \"player_down\")
 	walk_blend_position.x = move_toward(walk_blend_position.x, input_dir.x, WALK_BLEND_SPEED)
 	walk_blend_position.y = move_toward(walk_blend_position.y, input_dir.y, WALK_BLEND_SPEED)
 	$AnimationTree.set(\"parameters/WalkBlendSpace2D/blend_position\", walk_blend_position)
@@ -59,12 +59,12 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta * WEIGHT
 
 	# Handle jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+	if Input.is_action_just_pressed(\"player_jump\") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector(\"left\", \"right\", \"up\", \"down\")
+	var input_dir := Input.get_vector(\"player_left\", \"player_right\", \"player_up\", \"player_down\")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		velocity.x = direction.x * SPEED
@@ -77,7 +77,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed(\"ui_cancel\"):
+	if event.is_action_pressed(\"torch_dim\"):
 		remove_life()
 	if event.is_action_pressed(\"ui_select\"):
 		add_life()

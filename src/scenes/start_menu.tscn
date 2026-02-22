@@ -181,7 +181,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.92156863)
 theme_override_fonts/font = SubResource("FontVariation_h7v81")
 theme_override_font_sizes/font_size = 18
-text = "The almost finished game, but not realy"
+text = "The almost finished game, but not realy..."
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=698947944]
@@ -236,7 +236,12 @@ dialog_text = "Control:
  - A: Left
  - D: Right
  - S: Backward
-- Click left: Move item"
+- Space: Jump
+- Q: Turn down the torch
+- Click left: Move item
+
+Goal:
+You must find all the souls, but you must also stay hidden from monsters."
 
 [node name="CreditDialog" type="AcceptDialog" parent="." unique_id=981238630]
 oversampling_override = 1.0
@@ -244,7 +249,8 @@ title = "CREDIT"
 dialog_text = "The Kroeg Team
 - Louis
 - Théo
-- Yann"
+- Yann
+                                          "
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HowToButton" to="." method="_on_how_to_button_pressed"]

@@ -40,7 +40,7 @@ func _process(_delta: float) -> void:
 		draggingCollider.global_position = draggingPosition
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed(\"ui_cancel\"):
+	if event.is_action_pressed(\"torch_dim\"):
 		if $Player.current_life > 0:
 			var grain_shader = $CanvasLayer/ScreenFX.material
 			var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
