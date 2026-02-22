@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://c0bdtjmn1b4gh"]
 
+[ext_resource type="PackedScene" uid="uid://m4otpnaqawgg" path="res://src/entities/crate.tscn" id="1_bd8mh"]
 [ext_resource type="PackedScene" uid="uid://bum3w3ougalos" path="res://src/entities/player.tscn" id="1_qfxj7"]
 [ext_resource type="Shader" uid="uid://ca0oc4ogcacr7" path="res://src/shaders/sky.gdshader" id="2_lcg6w"]
 [ext_resource type="PackedScene" uid="uid://dho3i07b1prfl" path="res://assets/models/terrain.glb" id="3_yufto"]
@@ -9,11 +10,16 @@
 [ext_resource type="MultiMesh" uid="uid://drqa1neunroy3" path="res://assets/meshes/grass.multimesh" id="7_6e0h8"]
 [ext_resource type="Shader" uid="uid://dbhshnw2v3m5u" path="res://src/shaders/grass.gdshader" id="7_bd8mh"]
 [ext_resource type="Texture2D" uid="uid://bfuyfft60goqr" path="res://assets/textures/grass.png" id="7_h2mn8"]
+[ext_resource type="PackedScene" uid="uid://eh8dc7qlpck6" path="res://src/entities/rock.tscn" id="10_5dxuo"]
 [ext_resource type="PackedScene" uid="uid://bhmrmut1jjhoo" path="res://src/utils/fps.tscn" id="10_6e0h8"]
 
 [sub_resource type="GDScript" id="GDScript_qfxj7"]
 script/source = "extends Node3D
 
+var draggingCollider: Node3D
+var draggingPosition: Vector3
+var draggingOffset: float
+var doDrag := false
 @onready var viewport = $SubViewport # Vérifie bien le chemin vers ton SubViewport
 @onready var world_env = $WorldEnvironment
 
@@ -27,12 +33,15 @@ func _ready():
 # todo: find a better shader value
 # todo: properly rename node
 
+func _process(_delta: float) -> void:
+	if draggingCollider:
+		draggingCollider.global_position = draggingPosition
+
 func _input(event: InputEvent) -> void:
-	var grain_shader = $CanvasLayer/ScreenFX.material
-	var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
-	#var grain_amount = grain_shader.get_shader_parameter(\"grain_amount\")
 	if event.is_action_pressed(\"ui_cancel\"):
 		if $Player.current_life > 0:
+			var grain_shader = $CanvasLayer/ScreenFX.material
+			var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
 			grain_shader.set_shader_parameter(\"grain_size\", grain_size + 0.2)
 			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount + 0.01)
 	if event.is_action_pressed(\"ui_select\"):
@@ -43,8 +52,44 @@ func _input(event: InputEvent) -> void:
 		# \"signal\" or other sync features, we will be assured that an update
 		# has been performed on the player life
 		if $Player.current_life < $Player.max_life:
+			var grain_shader = $CanvasLayer/ScreenFX.material
+			var grain_size = grain_shader.get_shader_parameter(\"grain_size\")
 			grain_shader.set_shader_parameter(\"grain_size\", grain_size - 0.2)
 			#grain_shader.set_shader_parameter(\"grain_amount\", grain_amount - 0.01)
+
+	if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			var currentCamera := get_viewport().get_camera_3d()
+			var params := PhysicsRayQueryParameters3D.new()
+			params.from = currentCamera.project_ray_origin(event.position)
+			params.to = currentCamera.project_position(event.position, 1000)
+			var worldspace := get_world_3d().direct_space_state
+			var intersect := worldspace.intersect_ray(params)
+
+			if intersect && intersect[\"collider\"] in get_tree().get_nodes_in_group(\"moveable\"):
+				doDrag = true
+				draggingCollider = intersect[\"collider\"]
+				draggingPosition = intersect[\"collider\"].global_position
+				draggingOffset = intersect[\"collider\"].global_position.distance_to(intersect[\"position\"]) * 1.5
+		else:
+			doDrag = false
+			draggingCollider = null
+			draggingPosition = Vector3.ZERO
+			draggingOffset = 0
+
+	if event is InputEventMouse && draggingCollider:
+		var currentCamera := get_viewport().get_camera_3d()
+		var params := PhysicsRayQueryParameters3D.new()
+		params.from = currentCamera.project_ray_origin(event.position)
+		params.to = currentCamera.project_position(event.position, 1000)
+		params.exclude = [draggingCollider]
+		var worldspace := get_world_3d().direct_space_state
+		var intersect := worldspace.intersect_ray(params)
+
+		if intersect:
+			draggingPosition = intersect[\"position\"] + intersect[\"normal\"].normalized() * draggingOffset
+			#snap on collider
+			#draggingPosition = intersect.[\"collider\"].global_position
 "
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lcg6w"]
@@ -203,7 +248,9 @@ vec4 _effect_circle(vec4 pixel, vec2 g_UV, float g_circle_size) {
 }
 
 void fragment() {
-	vec4 pixel = _effect_fisheye(SCREEN_PIXEL_SIZE, FRAGCOORD);
+	// FIXME: Disabled because object drag need correct ray tracing (need to be a camera option, not a shader)
+	//vec4 pixel = _effect_fisheye(SCREEN_PIXEL_SIZE, FRAGCOORD);
+	vec4 pixel = vec4(texture(SCREEN_TEXTURE, UV).rgb,1.0);
 	pixel = _effect_circle(pixel, UV, circle_size);
 	pixel = _effect_circle(pixel, UV, circle_size + 0.05);
 	pixel = _effect_circle(pixel, UV, circle_size + 0.10);
@@ -317,7 +364,7 @@ script = SubResource("GDScript_qfxj7")
 environment = SubResource("Environment_3rtjt")
 
 [node name="Player" parent="." unique_id=460088547 instance=ExtResource("1_qfxj7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.395107, -55.347443, 355.38214)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.34549, -46.5089, 330.16125)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=1792243068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 1)
@@ -330,40 +377,38 @@ max_x_angle = 0.7853981633974483
 fov = 70.0
 size = 11.059
 
-[node name="MapMesh" parent="." unique_id=254551139 instance=ExtResource("3_yufto")]
+[node name="Map" type="Node3D" parent="." unique_id=145537176]
 
-[node name="Plane" parent="MapMesh" index="0" unique_id=383846702]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -333.3151)
-visible = false
+[node name="MapMesh" parent="Map" unique_id=2032639576 instance=ExtResource("3_yufto")]
 
-[node name="Landscape_003" parent="MapMesh" index="1" unique_id=1152816687]
+[node name="Landscape_003" parent="Map/MapMesh" index="0" unique_id=1038247005]
 surface_material_override/0 = SubResource("ShaderMaterial_lcg6w")
 
-[node name="CollisionShape3D" parent="MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(254551139, 680876214) index="0" unique_id=1441632870]
+[node name="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1839485438) index="0" unique_id=1736704008]
 transform = Transform3D(0.9999999, 0.0002286733, -0.00012744174, -0.00022867277, 0.9999999, 2.479717e-06, 0.00012744273, -2.4290296e-06, 1, 0, 0, 0)
 
-[node name="Wall1" type="CollisionShape3D" parent="MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(254551139, 680876214) index="1" unique_id=1238315882]
+[node name="Wall1" type="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1839485438) index="1" unique_id=1238315882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17579183, -0.1847265, 2.073296)
 shape = SubResource("BoxShape3D_bd8mh")
 
-[node name="TreeMultiMesh" type="MultiMeshInstance3D" parent="MapMesh" unique_id=1688826147 node_paths=PackedStringArray("target_surface")]
+[node name="TreeMultiMesh" type="MultiMeshInstance3D" parent="Map" unique_id=1688826147 node_paths=PackedStringArray("target_surface")]
 cast_shadow = 0
 multimesh = ExtResource("4_h2mn8")
 script = ExtResource("6_flib5")
 instance_count = 10000
-target_surface = NodePath("../Landscape_003/StaticBody3D")
+target_surface = NodePath("../MapMesh/Landscape_003/StaticBody3D")
 terrain_texture = ExtResource("7_h2mn8")
 placement_seed = 43
 max_height = -20.0
 max_slope_degrees = 10.0
 
-[node name="GrassMultiMesh" type="MultiMeshInstance3D" parent="MapMesh" unique_id=64103318 node_paths=PackedStringArray("target_surface")]
+[node name="GrassMultiMesh" type="MultiMeshInstance3D" parent="Map" unique_id=64103318 node_paths=PackedStringArray("target_surface")]
 material_override = SubResource("ShaderMaterial_5dxuo")
 cast_shadow = 0
 multimesh = ExtResource("7_6e0h8")
 script = ExtResource("6_flib5")
 instance_count = 1000000
-target_surface = NodePath("../Landscape_003/StaticBody3D")
+target_surface = NodePath("../MapMesh/Landscape_003/StaticBody3D")
 terrain_texture = ExtResource("7_h2mn8")
 area_size = 1500.0
 placement_seed = 43
@@ -371,6 +416,21 @@ scale_min = 1.0
 scale_max = 2.0
 max_height = -20.0
 max_slope_degrees = 20.0
+
+[node name="Rock1" parent="Map" unique_id=1910144424 instance=ExtResource("10_5dxuo")]
+transform = Transform3D(3.7994542, -0.124168105, 0, 0.28258052, 1.6612555, -0.18281536, 0.019918555, 0.11709868, 2.5935647, 118.188225, -43.85744, 273.89307)
+
+[node name="Rock2" parent="Map" unique_id=1159135387 instance=ExtResource("10_5dxuo")]
+transform = Transform3D(4.5264044, -0.16851717, -0.44976723, 0.40112725, 1.6573145, -0.22660491, 0.8337627, 0.1175189, 2.5507567, 127.864716, -37.818035, 277.19528)
+
+[node name="Rock3" parent="Map" unique_id=437020308 instance=ExtResource("10_5dxuo")]
+transform = Transform3D(2.4727342, -0.24054459, 0.23051794, 0.21619196, 3.011946, -0.23139848, -0.1973496, 0.2855626, 2.6348324, 137.78, -35.014107, 277.229)
+
+[node name="Rock4" parent="Map" unique_id=560932715 instance=ExtResource("10_5dxuo")]
+transform = Transform3D(0.9917419, 0.1887826, 0.26047224, -0.08682408, 1.9848078, -0.26146722, -0.0943913, 0.15779515, 2.9772117, 140.73572, -31.646343, 276.9095)
+
+[node name="Crate1" parent="Map" unique_id=471663523 groups=["moveable"] instance=ExtResource("1_bd8mh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119.82678, -40.55216, 274.9902)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1737969835]
 
@@ -399,4 +459,4 @@ grow_vertical = 2
 
 [node name="Fps" parent="." unique_id=50958211 instance=ExtResource("10_6e0h8")]
 
-[editable path="MapMesh"]
+[editable path="Map/MapMesh"]

@@ -41,6 +41,9 @@ _subresources={
 "nodes": {
 "PATH:Landscape_003": {
 "generate/physics": true
+},
+"PATH:Plane": {
+"import/skip_import": true
 }
 }
 }
