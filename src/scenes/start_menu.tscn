@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://dmmyidf6sv7bq"]
+[gd_scene format=3 uid="uid://dmbtj134rge8a"]
 
-[ext_resource type="FontFile" uid="uid://cs5bnmrk35frt" path="res://assets/fonts/WinkyRough-VariableFont_wght.ttf" id="1_oue7h"]
-[ext_resource type="Theme" uid="uid://cs0fapwlq4qxq" path="res://src/ui/menu.theme" id="2_fm3t7"]
+[ext_resource type="FontFile" uid="uid://cs5bnmrk35frt" path="res://assets/fonts/WinkyRough-VariableFont_wght.ttf" id="1_h7v81"]
+[ext_resource type="Theme" uid="uid://cs0fapwlq4qxq" path="res://src/ui/menu.theme" id="2_h7v81"]
 
 [sub_resource type="GDScript" id="GDScript_tam46"]
 script/source = "extends Control
@@ -9,17 +9,30 @@ script/source = "extends Control
 func _on_play_button_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://src/scenes/game.tscn\")
 
+func _on_how_to_button_pressed() -> void:
+	$HowToDialog.popup_centered()
+
 func _on_credit_button_pressed() -> void:
 	$CreditDialog.popup_centered()
 
 func _on_exit_button_pressed() -> void:
 	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 	get_tree().quit()
+
+func _on_audio_button_pressed() -> void:
+	Global.toogle_audio()
+	if Global.is_playing_audio:
+		$AudioButton.text = \"Audio: ON\"
+	else:
+		$AudioButton.text = \"Audio: OFF\"
 "
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h7v81"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h7v81"]
 width = 1080
 height = 1080
+noise = SubResource("FastNoiseLite_h7v81")
 
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_h7v81"]
 output_port_for_preview = 0
@@ -108,15 +121,15 @@ nodes/fragment/connections = PackedInt32Array(5, 0, 4, 0, 6, 0, 7, 0, 7, 0, 0, 0
 shader = SubResource("VisualShader_h7v81")
 
 [sub_resource type="FontVariation" id="FontVariation_2521n"]
-base_font = ExtResource("1_oue7h")
+base_font = ExtResource("1_h7v81")
 variation_opentype = {
 2003265652: 700
 }
 
 [sub_resource type="FontVariation" id="FontVariation_h7v81"]
-base_font = ExtResource("1_oue7h")
+base_font = ExtResource("1_h7v81")
 
-[node name="win" type="Control" unique_id=338322340 groups=["victory_ui"]]
+[node name="StartMenu" type="Control" unique_id=338322340]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -160,7 +173,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_2521n")
 theme_override_font_sizes/font_size = 32
-text = "YOU WON :)"
+text = "GPAPHYNIE"
 horizontal_alignment = 1
 
 [node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1960772369]
@@ -168,42 +181,62 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.92156863)
 theme_override_fonts/font = SubResource("FontVariation_h7v81")
 theme_override_font_sizes/font_size = 18
-text = "Sorry fot the bad gameplay
-We were begginners and saw too big oupsi
-Next time it will be better, cause we've frienship <3
-By the power of love and the frienship <3
-Thx Yatis for the bubble on the screen, and thanks to for the big brain
-Prout
-Bye"
+text = "The almost finished game, but not realy"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=698947944]
-visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=460066894]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 10
 
 [node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1516986411]
 layout_mode = 2
-theme = ExtResource("2_fm3t7")
+theme = ExtResource("2_h7v81")
 text = "Play"
+
+[node name="HowToButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1334698507]
+layout_mode = 2
+theme = ExtResource("2_h7v81")
+text = "How to play"
 
 [node name="CreditButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=2075235238]
 layout_mode = 2
-theme = ExtResource("2_fm3t7")
+theme = ExtResource("2_h7v81")
 text = "Credits"
 
 [node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=872020253]
 layout_mode = 2
-theme = ExtResource("2_fm3t7")
+theme = ExtResource("2_h7v81")
 text = "I want to leave :("
+
+[node name="AudioButton" type="Button" parent="." unique_id=302434728]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 18.0
+offset_right = -21.0
+offset_bottom = 53.0
+grow_horizontal = 0
+theme = ExtResource("2_h7v81")
+text = "Audio: ON"
+
+[node name="HowToDialog" type="AcceptDialog" parent="." unique_id=1976499082]
+oversampling_override = 1.0
+title = "HOW TO PLAY"
+dialog_text = "Control:
+ - W: Forward
+ - A: Left
+ - D: Right
+ - S: Backward
+- Click left: Move item"
 
 [node name="CreditDialog" type="AcceptDialog" parent="." unique_id=981238630]
 oversampling_override = 1.0
@@ -214,5 +247,7 @@ dialog_text = "The Kroeg Team
 - Yann"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HowToButton" to="." method="_on_how_to_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/CreditButton" to="." method="_on_credit_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="AudioButton" to="." method="_on_audio_button_pressed"]

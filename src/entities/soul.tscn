@@ -1,6 +1,21 @@
 [gd_scene format=3 uid="uid://dcohrwhlwl1ix"]
 
-[ext_resource type="Script" uid="uid://cvynr1c5qql01" path="res://src/scenes/soul.gd" id="1_r0j7b"]
+[sub_resource type="GDScript" id="GDScript_iq1y2"]
+script/source = "extends Area3D
+
+func _on_body_entered(body: Node3D) -> void:
+	# On vérifie si l'objet qui entre (le player) possède la variable 'soul'
+	if \"soul\" in body:
+		# 1. On incrémente la variable au singulier
+		body.soul += 1
+		
+		# 2. On lance ta fonction switch_flame
+		if body.has_method(\"switch_flame\"):
+			body.switch_flame()
+		
+		# 3. On supprime la soul de la scène
+		queue_free()
+"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p7kqy"]
 transparency = 1
@@ -36,9 +51,9 @@ material = SubResource("ShaderMaterial_txje5")
 radial_segments = 14
 rings = 7
 
-[node name="Area3D" type="Area3D" unique_id=9560848]
+[node name="Soul" type="Area3D" unique_id=9560848]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08841759, 0)
-script = ExtResource("1_r0j7b")
+script = SubResource("GDScript_iq1y2")
 
 [node name="flame" type="CPUParticles3D" parent="." unique_id=2078955310]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.12275094, 0)

@@ -28,7 +28,7 @@ var soul : int = 0
 @onready var torch_base_energy = torch_light_node.light_energy
 @onready var torch_base_range = torch_light_node.omni_range
 @onready var torch_cible_energy = torch_light_node.light_energy
-const WIN_SCENE = preload(\"res://src/scenes/win.tscn\") # Vérifie bien le chemin du fichier !`
+
 func _ready() -> void:
 	$AnimationTree.active = true
 	torch_particles_node.emitting = true
@@ -86,28 +86,13 @@ func switch_flame() -> void:
 	if soul < 5:
 		soul += 1
 		torch_particles_node.scale_amount_max += 0.2
+		match soul:
+			1: torch_particles_node.color_ramp.set_color(0, Color(0.299, 0.502, 0.97, 0.264))
+			2: torch_particles_node.color_ramp.set_color(1, Color(0.21, 0.422, 0.943, 1.0))
+			3: torch_particles_node.color_ramp.set_color(2, Color(0.062, 0.254, 0.806, 1.0))
+			4: torch_particles_node.color_ramp.set_color(3, Color(0.821, 0.0, 0.702, 1.0))
 	else:
-# 1. On crée une instance de la scène Win
-		var win_instance = WIN_SCENE.instantiate()
-	
-	# 2. On l'ajoute à l'arbre de scène (en haut de tout le reste)
-		get_tree().root.add_child(win_instance)
-	
-	# 3. On libère la souris pour pouvoir cliquer
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	
-	# Optionnel : Mettre le jeu en pause
-	# get_tree().paused = true		# Optionnel : Arrêter le temps ou libérer la souris
-		# Engine.time_scale = 0 
-		# Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	if soul == 1:
-		torch_particles_node.color_ramp.set_color(0, Color(0.299, 0.502, 0.97, 0.264))
-	elif soul == 2:
-		torch_particles_node.color_ramp.set_color(1, Color(0.21, 0.422, 0.943, 1.0))
-	elif soul == 3:
-		torch_particles_node.color_ramp.set_color(2, Color(0.062, 0.254, 0.806, 1.0))
-	elif soul == 4:
-		torch_particles_node.color_ramp.set_color(3, Color(0.821, 0.0, 0.702, 1.0))
+		get_tree().change_scene_to_file(\"res://src/scenes/win_menu.tscn\")
 
 func remove_life() -> void:
 	if current_life < 0:
