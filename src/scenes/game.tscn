@@ -432,7 +432,29 @@ transform = Transform3D(2.4727342, -0.24054459, 0.23051794, 0.21619196, 3.011946
 transform = Transform3D(0.9917419, 0.1887826, 0.26047224, -0.08682408, 1.9848078, -0.26146722, -0.0943913, 0.15779515, 2.9772117, 140.73572, -31.646343, 276.9095)
 
 [node name="Crate1" parent="Map" unique_id=471663523 groups=["moveable"] instance=ExtResource("1_bd8mh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 119.82678, -40.55216, 274.9902)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 140.51907, -44.46822, 307.40295)
+
+[node name="Soul1" parent="Map" unique_id=9560848 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135.2761, -22.73598, 265.23206)
+
+[node name="Soul2" parent="Map" unique_id=206961406 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123.54591, -44.8355, 314.79672)
+
+[node name="Soul3" parent="Map" unique_id=1307085119 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300079, -41.5927, 159.79367)
+
+[node name="Soul4" parent="Map" unique_id=1870028107 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6083183, -42.175087, 168.83951)
+
+[node name="Soul5" parent="Map" unique_id=599391911 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.114212, -41.06463, 177.7739)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Map" unique_id=1088960548]
+transform = Transform3D(0.9659258, 0.25000003, -0.066987306, 0, 0.25881907, 0.9659259, 0.25881907, -0.9330127, 0.25000003, 139.51907, -34.044727, 309.66425)
+light_energy = 5.0
+spot_range = 15.0
+spot_attenuation = 0.5
+spot_angle = 33.358704
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1737969835]
 
@@ -463,20 +485,5 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="Area3D" parent="." unique_id=9560848 instance=ExtResource("13_tnd0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135.2761, -22.111845, 265.23206)
-
-[node name="Area3D3" parent="." unique_id=1307085119 instance=ExtResource("13_tnd0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.883137, -47.764847, 169.06133)
-
-[node name="Area3D4" parent="." unique_id=1870028107 instance=ExtResource("13_tnd0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7022095, -47.764847, 169.06133)
-
-[node name="Area3D5" parent="." unique_id=599391911 instance=ExtResource("13_tnd0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.174501, -47.764847, 169.06133)
-
-[node name="Area3D2" parent="." unique_id=206961406 instance=ExtResource("13_tnd0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123.54591, -42.824295, 314.79672)
 
 [editable path="Map/MapMesh"]

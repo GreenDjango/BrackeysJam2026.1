@@ -15,9 +15,8 @@ const JUMP_VELOCITY := 13.0
 const WEIGHT := 2.5 
 const WALK_BLEND_SPEED := 0.1
 
-const TORCH_FLAME_SPEED := 2.0
-const TORCH_FLAME_INTENSITY := 0.2
-const TORCH_FLAME_JITTER := 0.2
+const TORCH_FLAME_JITTER_SPEED := 10.
+const TORCH_FLAME_JITTER_INTENSITY := 0.05
 
 var idle_time := 0.0
 var walk_blend_position := Vector2(0, 0)
@@ -25,9 +24,10 @@ var max_life : int = 5
 var current_life : int = max_life
 var soul : int = 0
 
-@onready var torch_base_energy = torch_light_node.light_energy
-@onready var torch_base_range = torch_light_node.omni_range
-@onready var torch_cible_energy = torch_light_node.light_energy
+@onready var torch_base_attenuation := torch_light_node.omni_attenuation
+@onready var torch_base_range := torch_light_node.omni_range
+var torch_flame_jitter := 0.
+var torch_flame_jitter_cible := 0.
 
 func _ready() -> void:
 	$AnimationTree.active = true
@@ -46,12 +46,12 @@ func _process(delta: float) -> void:
 	else:
 		idle_time = 0
 
-	# Torch light animation 
-	if abs(torch_light_node.light_energy - torch_cible_energy) < 0.1:
-		torch_cible_energy = torch_base_energy + randf_range(-TORCH_FLAME_INTENSITY, TORCH_FLAME_INTENSITY)
-	torch_light_node.light_energy = lerp(torch_light_node.light_energy, torch_cible_energy, TORCH_FLAME_SPEED * delta)
-	var tremblement := randf_range(-TORCH_FLAME_JITTER, TORCH_FLAME_JITTER)
-	torch_light_node.omni_range = ((torch_base_range * current_life * 0.5) * (torch_light_node.light_energy / torch_base_energy)) + tremblement
+	# Torch light animation
+	if  abs(torch_flame_jitter_cible - torch_flame_jitter) < TORCH_FLAME_JITTER_INTENSITY / 10.:
+		torch_flame_jitter_cible = randf_range(-TORCH_FLAME_JITTER_INTENSITY, TORCH_FLAME_JITTER_INTENSITY)
+	torch_flame_jitter = lerp(torch_flame_jitter, torch_flame_jitter_cible, TORCH_FLAME_JITTER_SPEED * delta)
+	torch_light_node.omni_attenuation = torch_base_attenuation + (torch_base_attenuation * torch_flame_jitter)
+	torch_light_node.omni_range = torch_base_range + (torch_base_range * torch_flame_jitter / 4.)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -94,22 +94,24 @@ func switch_flame() -> void:
 	else:
 		get_tree().change_scene_to_file(\"res://src/scenes/win_menu.tscn\")
 
-func remove_life() -> void:
-	if current_life < 0:
+func remove_life() -> void:  
+	if current_life <= 0:
 		return
 	current_life = current_life - 1
-	# FIXME: overwrite by light animation in process
-	torch_light_node.light_energy = current_life / float(max_life)
-	torch_particles_node.scale_amount_max = current_life * .2 -0.2
+	if current_life == 0:
+		torch_light_node.light_energy = 0
+		torch_particles_node.scale_amount_max = 0
+	else:
+		torch_light_node.light_energy = current_life / float(max_life) * 2
+		torch_particles_node.scale_amount_max = current_life * .2 - 0.2
 	$\"../CanvasLayer/ScreenFX\".fx_grain_size_update.emit(-1)
 
 func add_life() -> void:
-	if current_life >= max_life:
+	if current_life >= max_life :
 		return
 	current_life = current_life + 1
-	# FIXME: overwrite by light animation in process
-	torch_light_node.light_energy = current_life / float(max_life)
-	torch_particles_node.scale_amount_max = current_life * .2 +0.2
+	torch_light_node.light_energy = current_life / float(max_life) * 2
+	torch_particles_node.scale_amount_max = current_life * .2 + 0.2
 	$\"../CanvasLayer/ScreenFX\".fx_grain_size_update.emit(1)
 "
 
@@ -252,10 +254,10 @@ shape = SubResource("CapsuleShape3D_o5qvw")
 [node name="MainCharacter" parent="." unique_id=1015311831 instance=ExtResource("1_cusn3")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
-[node name="Armature" parent="MainCharacter" index="0" unique_id=2116177404]
+[node name="Armature" parent="MainCharacter" index="0" unique_id=794460903]
 transform = Transform3D(0.01, 0, 0, 0, -4.3711387e-10, -0.01, 0, 0.01, -4.3711387e-10, 0, 0, 0)
 
-[node name="Skeleton3D" parent="MainCharacter/Armature" index="0" unique_id=837559752]
+[node name="Skeleton3D" parent="MainCharacter/Armature" index="0" unique_id=831973412]
 bones/0/position = Vector3(2.385511, -3.4569077, -260.3428)
 bones/0/rotation = Quaternion(-0.668815, -0.17455222, 0.17949446, 0.6999998)
 bones/1/position = Vector3(8.34465e-07, 19.411194, -0.35083914)
@@ -335,13 +337,12 @@ bone_idx = 10
 transform = Transform3D(44.554344, -86.41222, 23.406086, 86.67772, 48.17878, 12.875723, -22.402992, 14.551134, 96.36585, 17.088043, -1.9701233, 12.313446)
 
 [node name="TorchLight" type="OmniLight3D" parent="MainCharacter/Armature/Skeleton3D/LeftHandBoneAttachment/Torch" unique_id=225046883]
-transform = Transform3D(0.4455428, 0.86677605, -0.22402954, -0.8641219, 0.48178786, 0.14551166, 0.23406057, 0.12875739, 0.96365803, -0.261788, 1.1769967, -0.1588211)
+transform = Transform3D(0.44554275, 0.86677605, -0.22402963, -0.8641219, 0.4817878, 0.14551163, 0.23406056, 0.12875746, 0.9636581, -0.035677433, 1.5911303, -0.03093779)
 light_color = Color(0.9999997, 0.7524437, 0.66248655, 1)
 shadow_enabled = true
-shadow_transmittance_bias = 16.0
-shadow_opacity = 0.8
 shadow_caster_mask = 4294967294
-omni_range = 8.0
+omni_range = 15.0
+omni_attenuation = 0.5
 
 [node name="NeckBoneAttachment" type="BoneAttachment3D" parent="MainCharacter/Armature/Skeleton3D" index="1" unique_id=1089591330]
 transform = Transform3D(0.85391235, -0.12539323, -0.5050845, 0.51976925, 0.1570863, 0.8397406, -0.025955945, -0.9795921, 0.19931346, -0.62767196, 5.0162325, -327.52817)
