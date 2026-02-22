@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dsk2hrxawlmni"]
+
+[ext_resource type="AudioStream" uid="uid://ha4k64thnnjh" path="res://assets/audio/delosound-mysterious-mystical-ambient-442832.mp3" id="1_oin3u"]
+
+[sub_resource type="GDScript" id="GDScript_oin3u"]
+script/source = "extends Node
+
+var is_playing_audio := true
+
+func toogle_audio() -> void:
+	if is_playing_audio:
+		is_playing_audio = false
+		$BackgroundMusic.stop()
+	else:
+		is_playing_audio = true
+		$BackgroundMusic.play()
+"
+
+[node name="Global" type="Node" unique_id=995117903]
+script = SubResource("GDScript_oin3u")
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1309872807]
+stream = ExtResource("1_oin3u")
+volume_db = -3.0
+autoplay = true
+parameters/looping = true

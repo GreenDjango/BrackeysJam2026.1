@@ -9,17 +9,30 @@ script/source = "extends Control
 func _on_play_button_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://src/scenes/game.tscn\")
 
+func _on_how_to_button_pressed() -> void:
+	$HowToDialog.popup_centered()
+
 func _on_credit_button_pressed() -> void:
 	$CreditDialog.popup_centered()
 
 func _on_exit_button_pressed() -> void:
 	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 	get_tree().quit()
+
+func _on_audio_button_pressed() -> void:
+	Global.toogle_audio()
+	if Global.is_playing_audio:
+		$AudioButton.text = \"Audio: ON\"
+	else:
+		$AudioButton.text = \"Audio: OFF\"
 "
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h7v81"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h7v81"]
 width = 1080
 height = 1080
+noise = SubResource("FastNoiseLite_h7v81")
 
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_h7v81"]
 output_port_for_preview = 0
@@ -187,6 +200,11 @@ layout_mode = 2
 theme = ExtResource("2_h7v81")
 text = "Play"
 
+[node name="HowToButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1334698507]
+layout_mode = 2
+theme = ExtResource("2_h7v81")
+text = "How to play"
+
 [node name="CreditButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=2075235238]
 layout_mode = 2
 theme = ExtResource("2_h7v81")
@@ -197,6 +215,29 @@ layout_mode = 2
 theme = ExtResource("2_h7v81")
 text = "I want to leave :("
 
+[node name="AudioButton" type="Button" parent="." unique_id=302434728]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 18.0
+offset_right = -21.0
+offset_bottom = 53.0
+grow_horizontal = 0
+theme = ExtResource("2_h7v81")
+text = "Audio: ON"
+
+[node name="HowToDialog" type="AcceptDialog" parent="." unique_id=1976499082]
+oversampling_override = 1.0
+title = "HOW TO PLAY"
+dialog_text = "Control:
+ - W: Forward
+ - A: Left
+ - D: Right
+ - S: Backward
+- Click left: Move item"
+
 [node name="CreditDialog" type="AcceptDialog" parent="." unique_id=981238630]
 oversampling_override = 1.0
 title = "CREDIT"
@@ -206,5 +247,7 @@ dialog_text = "The Kroeg Team
 - Yann"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HowToButton" to="." method="_on_how_to_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/CreditButton" to="." method="_on_credit_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="AudioButton" to="." method="_on_audio_button_pressed"]
