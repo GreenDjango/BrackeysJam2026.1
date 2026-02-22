@@ -112,8 +112,10 @@ sky = SubResource("Sky_covw0")
 [sub_resource type="GDScript" id="GDScript_covw0"]
 script/source = "extends SpringArm3D
 
-@export_range(0., 180., 0.1, \"radians_as_degrees\") var max_y_angle: float = PI/2
-@export_range(0., 180., 0.1, \"radians_as_degrees\") var max_x_angle: float = PI/2
+@export_range(0., 180., 1., \"radians_as_degrees\") var max_y_angle: float = PI/2
+@export_range(0., 180., 1., \"radians_as_degrees\") var max_x_angle: float = PI/2
+@export_range(-180., 180., 1., \"radians_as_degrees\") var default_y_angle: float = 0
+@export_range(-180., 180., 1., \"radians_as_degrees\") var default_x_angle: float = -PI/4
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -123,8 +125,8 @@ func _input(event: InputEvent) -> void:
 			Vector2.ONE
 		) - Vector2(0.5, 0.5)) * 2
 
-		rotation.y = -mouse_offset.x * max_y_angle
-		rotation.x = -mouse_offset.y * max_x_angle
+		rotation.y = default_y_angle + -mouse_offset.x * (max_y_angle / 2.)
+		rotation.x = default_x_angle + -mouse_offset.y * (max_x_angle / 2.)
 
 		$\"../../CanvasLayer/ScreenFX\".fx_grain_time_update.emit()
 "
@@ -366,14 +368,12 @@ script = SubResource("GDScript_qfxj7")
 environment = SubResource("Environment_3rtjt")
 
 [node name="Player" parent="." unique_id=460088547 instance=ExtResource("1_qfxj7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.34549, -46.5089, 330.16125)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 115.57816, -45.60174, 344.57782)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=1792243068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 1)
 spring_length = 20.0
 script = SubResource("GDScript_covw0")
-max_y_angle = 0.7853981633974483
-max_x_angle = 0.7853981633974483
 
 [node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=391964210]
 fov = 70.0
@@ -383,13 +383,13 @@ size = 11.059
 
 [node name="MapMesh" parent="Map" unique_id=2032639576 instance=ExtResource("3_yufto")]
 
-[node name="Landscape_003" parent="Map/MapMesh" index="0" unique_id=165701008]
+[node name="Landscape_003" parent="Map/MapMesh" index="0" unique_id=153921017]
 surface_material_override/0 = SubResource("ShaderMaterial_lcg6w")
 
-[node name="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 537674360) index="0" unique_id=1137386471]
+[node name="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1396569816) index="0" unique_id=407746742]
 transform = Transform3D(0.9999999, 0.0002286733, -0.00012744174, -0.00022867277, 0.9999999, 2.479717e-06, 0.00012744273, -2.4290296e-06, 1, 0, 0, 0)
 
-[node name="Wall1" type="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 537674360) index="1" unique_id=1238315882]
+[node name="Wall1" type="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1396569816) index="1" unique_id=1238315882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17579183, -0.1847265, 2.073296)
 shape = SubResource("BoxShape3D_bd8mh")
 
