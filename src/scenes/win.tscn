@@ -1,0 +1,218 @@
+[gd_scene format=3 uid="uid://dmmyidf6sv7bq"]
+
+[ext_resource type="FontFile" uid="uid://cs5bnmrk35frt" path="res://assets/fonts/WinkyRough-VariableFont_wght.ttf" id="1_oue7h"]
+[ext_resource type="Theme" uid="uid://cs0fapwlq4qxq" path="res://src/ui/menu.theme" id="2_fm3t7"]
+
+[sub_resource type="GDScript" id="GDScript_tam46"]
+script/source = "extends Control
+
+func _on_play_button_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://src/scenes/game.tscn\")
+
+func _on_credit_button_pressed() -> void:
+	$CreditDialog.popup_centered()
+
+func _on_exit_button_pressed() -> void:
+	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+	get_tree().quit()
+"
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h7v81"]
+width = 1080
+height = 1080
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_h7v81"]
+output_port_for_preview = 0
+texture = SubResource("NoiseTexture2D_h7v81")
+
+[sub_resource type="VisualShaderNodeVectorFunc" id="VisualShaderNodeVectorFunc_nr8cr"]
+default_input_values = [0, Vector2(0, 0)]
+op_type = 0
+function = 18
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_t7jdw"]
+default_input_values = [0, 0.0, 1, -0.05]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_echhp"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(512, 512)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeMix" id="VisualShaderNodeMix_vd127"]
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(1, 1, 1), 2, Vector3(0.5, 0.5, 0.5)]
+op_type = 3
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_nr8cr"]
+output_port_for_preview = 0
+texture = SubResource("NoiseTexture2D_h7v81")
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_t7jdw"]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_50bkv"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(512, 512)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_echhp"]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_h7v81"]
+input_name = "color"
+
+[sub_resource type="VisualShaderNodeColorOp" id="VisualShaderNodeColorOp_nr8cr"]
+operator = 4
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_h7v81"]
+default_input_values = [0, 0.0, 1, -0.01]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorFunc" id="VisualShaderNodeVectorFunc_h7v81"]
+default_input_values = [0, Vector2(0, 0)]
+op_type = 0
+function = 18
+
+[sub_resource type="VisualShader" id="VisualShader_h7v81"]
+mode = 1
+flags/light_only = false
+nodes/vertex/0/position = Vector2(560, 180)
+nodes/fragment/0/position = Vector2(2240, 260)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture_nr8cr")
+nodes/fragment/2/position = Vector2(1420, 280)
+nodes/fragment/3/node = SubResource("VisualShaderNodeInput_t7jdw")
+nodes/fragment/3/position = Vector2(220, 460)
+nodes/fragment/4/node = SubResource("VisualShaderNodeVectorOp_50bkv")
+nodes/fragment/4/position = Vector2(880, 360)
+nodes/fragment/5/node = SubResource("VisualShaderNodeInput_echhp")
+nodes/fragment/5/position = Vector2(360, 220)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_h7v81")
+nodes/fragment/6/position = Vector2(1300, 60)
+nodes/fragment/7/node = SubResource("VisualShaderNodeColorOp_nr8cr")
+nodes/fragment/7/position = Vector2(1920, 200)
+nodes/fragment/8/node = SubResource("VisualShaderNodeFloatOp_h7v81")
+nodes/fragment/8/position = Vector2(580, 420)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorFunc_h7v81")
+nodes/fragment/9/position = Vector2(1140, 360)
+nodes/fragment/10/node = SubResource("VisualShaderNodeTexture_h7v81")
+nodes/fragment/10/position = Vector2(1400, 800)
+nodes/fragment/11/node = SubResource("VisualShaderNodeVectorFunc_nr8cr")
+nodes/fragment/11/position = Vector2(1140, 660)
+nodes/fragment/13/node = SubResource("VisualShaderNodeFloatOp_t7jdw")
+nodes/fragment/13/position = Vector2(580, 680)
+nodes/fragment/14/node = SubResource("VisualShaderNodeVectorOp_echhp")
+nodes/fragment/14/position = Vector2(880, 640)
+nodes/fragment/15/node = SubResource("VisualShaderNodeMix_vd127")
+nodes/fragment/15/position = Vector2(1700, 520)
+nodes/fragment/connections = PackedInt32Array(5, 0, 4, 0, 6, 0, 7, 0, 7, 0, 0, 0, 8, 0, 4, 1, 3, 0, 8, 0, 4, 0, 9, 0, 9, 0, 2, 0, 11, 0, 10, 0, 3, 0, 13, 0, 14, 0, 11, 0, 5, 0, 14, 0, 13, 0, 14, 1, 2, 0, 15, 0, 15, 0, 7, 1, 10, 0, 15, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nr8cr"]
+shader = SubResource("VisualShader_h7v81")
+
+[sub_resource type="FontVariation" id="FontVariation_2521n"]
+base_font = ExtResource("1_oue7h")
+variation_opentype = {
+2003265652: 700
+}
+
+[sub_resource type="FontVariation" id="FontVariation_h7v81"]
+base_font = ExtResource("1_oue7h")
+
+[node name="win" type="Control" unique_id=338322340 groups=["victory_ui"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_tam46")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2090763430]
+material = SubResource("ShaderMaterial_nr8cr")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.10327574, 0.020704964, 0.0047437367, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1301347832]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.5
+offset_top = -20.0
+offset_right = 67.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=574811032]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=897084577]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_2521n")
+theme_override_font_sizes/font_size = 32
+text = "YOU WON :)"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1960772369]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.92156863)
+theme_override_fonts/font = SubResource("FontVariation_h7v81")
+theme_override_font_sizes/font_size = 18
+text = "Sorry fot the bad gameplay
+We were begginners and saw too big oupsi
+Next time it will be better, cause we've frienship <3
+By the power of love and the frienship <3
+Thx Yatis for the bubble on the screen, and thanks to for the big brain
+Prout
+Bye"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=698947944]
+visible = false
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=460066894]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+
+[node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1516986411]
+layout_mode = 2
+theme = ExtResource("2_fm3t7")
+text = "Play"
+
+[node name="CreditButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=2075235238]
+layout_mode = 2
+theme = ExtResource("2_fm3t7")
+text = "Credits"
+
+[node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=872020253]
+layout_mode = 2
+theme = ExtResource("2_fm3t7")
+text = "I want to leave :("
+
+[node name="CreditDialog" type="AcceptDialog" parent="." unique_id=981238630]
+oversampling_override = 1.0
+title = "CREDIT"
+dialog_text = "The Kroeg Team
+- Louis
+- Théo
+- Yann"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/CreditButton" to="." method="_on_credit_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

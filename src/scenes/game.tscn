@@ -6,12 +6,14 @@
 [ext_resource type="PackedScene" uid="uid://dho3i07b1prfl" path="res://assets/models/terrain.glb" id="3_yufto"]
 [ext_resource type="Shader" uid="uid://cviyctb1mo0wh" path="res://src/shaders/map.tres" id="4_276xm"]
 [ext_resource type="MultiMesh" uid="uid://bufrkyvxislhi" path="res://assets/meshes/tree.multimesh" id="4_h2mn8"]
-[ext_resource type="Script" uid="uid://dqcx7a4kwrdgd" path="res://src/utils/multi_mesh_instance_3d_2.gd" id="6_flib5"]
+[ext_resource type="Script" path="res://src/utils/multi_mesh_instance_3d_2.gd" id="6_flib5"]
 [ext_resource type="MultiMesh" uid="uid://drqa1neunroy3" path="res://assets/meshes/grass.multimesh" id="7_6e0h8"]
 [ext_resource type="Shader" uid="uid://dbhshnw2v3m5u" path="res://src/shaders/grass.gdshader" id="7_bd8mh"]
 [ext_resource type="Texture2D" uid="uid://bfuyfft60goqr" path="res://assets/textures/grass.png" id="7_h2mn8"]
 [ext_resource type="PackedScene" uid="uid://eh8dc7qlpck6" path="res://src/entities/rock.tscn" id="10_5dxuo"]
 [ext_resource type="PackedScene" uid="uid://bhmrmut1jjhoo" path="res://src/utils/fps.tscn" id="10_6e0h8"]
+[ext_resource type="PackedScene" uid="uid://dmmyidf6sv7bq" path="res://src/scenes/win.tscn" id="11_0fcgq"]
+[ext_resource type="PackedScene" uid="uid://dcohrwhlwl1ix" path="res://src/scenes/soul.tscn" id="13_tnd0m"]
 
 [sub_resource type="GDScript" id="GDScript_qfxj7"]
 script/source = "extends Node3D
@@ -381,13 +383,13 @@ size = 11.059
 
 [node name="MapMesh" parent="Map" unique_id=2032639576 instance=ExtResource("3_yufto")]
 
-[node name="Landscape_003" parent="Map/MapMesh" index="0" unique_id=1038247005]
+[node name="Landscape_003" parent="Map/MapMesh" index="0" unique_id=165701008]
 surface_material_override/0 = SubResource("ShaderMaterial_lcg6w")
 
-[node name="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1839485438) index="0" unique_id=1736704008]
+[node name="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 537674360) index="0" unique_id=1137386471]
 transform = Transform3D(0.9999999, 0.0002286733, -0.00012744174, -0.00022867277, 0.9999999, 2.479717e-06, 0.00012744273, -2.4290296e-06, 1, 0, 0, 0)
 
-[node name="Wall1" type="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 1839485438) index="1" unique_id=1238315882]
+[node name="Wall1" type="CollisionShape3D" parent="Map/MapMesh/Landscape_003/StaticBody3D" parent_id_path=PackedInt32Array(2032639576, 537674360) index="1" unique_id=1238315882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17579183, -0.1847265, 2.073296)
 shape = SubResource("BoxShape3D_bd8mh")
 
@@ -444,6 +446,11 @@ grow_vertical = 2
 color = Color(1, 1, 1, 0)
 script = SubResource("GDScript_h2mn8")
 
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1569732638]
+
+[node name="win" parent="CanvasLayer2" unique_id=338322340 instance=ExtResource("11_0fcgq")]
+visible = false
+
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1682316352]
 size = Vector2i(1024, 512)
 size_2d_override_stretch = true
@@ -458,5 +465,20 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Fps" parent="." unique_id=50958211 instance=ExtResource("10_6e0h8")]
+
+[node name="Area3D" parent="." unique_id=9560848 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135.2761, -22.111845, 265.23206)
+
+[node name="Area3D3" parent="." unique_id=1307085119 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.883137, -47.764847, 169.06133)
+
+[node name="Area3D4" parent="." unique_id=1870028107 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7022095, -47.764847, 169.06133)
+
+[node name="Area3D5" parent="." unique_id=599391911 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.174501, -47.764847, 169.06133)
+
+[node name="Area3D2" parent="." unique_id=206961406 instance=ExtResource("13_tnd0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123.54591, -42.824295, 314.79672)
 
 [editable path="Map/MapMesh"]
