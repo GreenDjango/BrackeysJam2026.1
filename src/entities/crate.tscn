@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://m4otpnaqawgg"]
+
+[ext_resource type="PackedScene" uid="uid://utcm1soviu0a" path="res://assets/models/crate.glb" id="1_5dpgj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5dpgj"]
+size = Vector3(2.6704636, 2.6769023, 2.6451406)
+
+[node name="Crate" type="RigidBody3D" unique_id=471663523]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=784064918]
+shape = SubResource("BoxShape3D_5dpgj")
+
+[node name="Mesh" parent="." unique_id=430085206 instance=ExtResource("1_5dpgj")]
+transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 11.552, -1.21, 0)
+
+[editable path="Mesh"]
