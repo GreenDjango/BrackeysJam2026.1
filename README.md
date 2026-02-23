@@ -1,8 +1,8 @@
-# <img src="assets/icon.png" alt="Game icon" width="64" style="margin-bottom: -3px;"/> NAME
+# <img src="assets/icon.png" alt="Game icon" width="64" style="margin-bottom: -3px;"/> GPAPHYNIE
 
 [![release][1]][2] [![license][7]][8]
 
-NAME is a **JAM game** for 💻**PC** / 🌐**Web**.
+GPAPHYNIE is a **JAM game** for 💻**PC** / 🌐**Web**.
 
 [Brackeys Game Jam 2026.1](https://itch.io/jam/brackeys-15) theme is `Strange places`.
 
@@ -10,20 +10,19 @@ NAME is a **JAM game** for 💻**PC** / 🌐**Web**.
 
 ## <img src="https://static.itch.io/favicon.ico"> Play on itch.io
 
-Play at **[example.com/TODO](https://example.com/TODO)**
+Play at **[greendjango.itch.io/gpaphynie](https://greendjango.itch.io/gpaphynie)**
 
 
 ## Install & Setup
 
 1. Download the 💻*binary* from **[releases](https://github.com/GreenDjango/BrackeysJam2026.1/releases)**
 2. Run the app
-3. Enjoy with `NAME` !
+3. Enjoy with `GPAPHYNIE` !
 4. Optional: `rm -rf *` for delete all your pc
 
 ---
 
 #### Project realised by:
-- **[@Fred S.](https://github.com/red-gecko27)** 🐧
 - **[@Louis C.](https://github.com/izonnnoui)** 🦦
 - **[@Théo C.](https://github.com/GreenDjango)** 🐙
 - **[@Yann M.](https://github.com/Paquity)** 🐤
